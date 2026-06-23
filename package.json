@@ -1,0 +1,23 @@
+{
+  "name": "playwrightrahulshetty",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report:html": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.1"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "playwright-mail-reporter": "^0.0.10",
+    "xlsx": "^0.18.5"
+  }
+}
