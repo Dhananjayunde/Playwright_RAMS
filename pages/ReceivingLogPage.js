@@ -6,7 +6,7 @@ class ReceivingLogPage {
 
         // Left menu
         this.receivingLogMenu =
-         page.locator('//*[@id="root"]/div/div/aside/div[2]/div[2]/div[2]/div/div/div[2]/p');
+            page.locator('aside').getByText('Receiving Log', { exact: true });
         
          // Buttons
         

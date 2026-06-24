@@ -20,14 +20,20 @@ class LoginPage {
         });
     }
 
+    async goTO() {
+        await this.page.goto('/login');
+        await this.page.waitForLoadState('networkidle');
+    }
+
     async login(email, password) {
+        await this.email.waitFor({ state: 'visible', timeout: 15000 });
         await this.email.fill(email);
         await this.password.fill(password);
         await this.signInBtn.click();
         await this.page.waitForLoadState('networkidle');
     }
 
-    async enterOTP(otpCode = '649003') {
+    async enterOTP(otpCode = '723908') {
         const otpDigits = otpCode.split('');
         const otpLocators = ['_r_3_', '_r_4_', '_r_5_', '_r_6_', '_r_7_', '_r_8_'];
         

@@ -6,22 +6,36 @@ const { WasteManagementPage } = require('../pages/WasteManagementPage');
 
 const testData = ExcelUtils.getData('./testData/LoginData.xlsx', 'Sheet2');
 
-test.describe('Waste Management Tests', () => {
+for (const data of testData) {
+    test.describe.serial(`Waste Management - ${data.Email}`, () => {
+        let page;
+        let login;
+        let waste;
 
-    test.beforeEach(async ({ page }) => {
-        await page.goto('/login');
-    });
+        test.beforeAll(async ({ browser }) => {
+            const context = await browser.newContext();
+            page = await context.newPage();
+            login = new LoginPage(page);
+            waste = new WasteManagementPage(page);
 
-    for (const data of testData) {
-        test(`Waste Management - ${data.Email}`, { timeout: 60000 }, async ({ page }) => {
-            const login = new LoginPage(page);
-            const waste = new WasteManagementPage(page);
-
+            await page.goto('/login');
             await login.login(data.Email, data.Password);
             await page.waitForLoadState('networkidle');
             await login.enterOTP();
+        });
+
+        test('Waste Management Create', { timeout: 60000 }, async () => {
+             
+            waste = new WasteManagementPage(page);
 
             await waste.fillWasteEntry();
         });
-    }
-});
+
+        test('Waste Management Move to Low Level', { timeout: 60000 }, async () => {
+         
+            waste = new WasteManagementPage(page);
+
+            await waste.moveWasteToLowLevel();
+        });
+    });
+}
