@@ -5,8 +5,10 @@ class TrackingPage {
     }
 
     async fillTrackingEntry() {
+       
+        await this.page.waitForLoadState('networkidle');
+
         await page.locator('p:has-text("Tracking")').click
-       // await this.page.getByText('Tracking').click();
         await this.page.waitForLoadState('networkidle');
 
         await this.page.getByRole('button', { name: '+ Add Shipment' }).click();
