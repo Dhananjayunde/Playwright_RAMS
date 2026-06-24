@@ -30,11 +30,7 @@ test.describe('Receiving Log Tests', () => {
         { timeout: 60000 },
         async ({ page }) => {
 
-            const login =
-                new LoginPage(page);
-
-            const receiving =
-                new ReceivingLogPage(page);
+            const login = new LoginPage(page);
 
             await login.login(
                 data.Email,
@@ -45,8 +41,8 @@ test.describe('Receiving Log Tests', () => {
 
             await login.enterOTP();
 
+            const receiving =new ReceivingLogPage(page);
             await page.waitForLoadState('networkidle');
-
             await receiving.fillReceivingEntry();
 
             await receiving.continueESign(

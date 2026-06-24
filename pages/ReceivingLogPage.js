@@ -11,10 +11,8 @@ class ReceivingLogPage {
          // Buttons
         
         this.logReceiptBtn =
-            page.getByRole('button', {
-                name: 'Log Receipt'
-            });
-
+            page.getByRole('button', { name: /\+ Log Receipt/i });
+            
         this.continueESignBtn = page.getByText('Continue to E-Signature', { exact: true });
             
         // Password
@@ -26,7 +24,7 @@ class ReceivingLogPage {
    
         
         await this.receivingLogMenu.click();
-         await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('networkidle');
     
         await this.logReceiptBtn.click();
        
