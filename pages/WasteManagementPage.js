@@ -60,7 +60,7 @@ class WasteManagementPage {
         await this.page.waitForLoadState('networkidle');
 
         await this.page.getByText('Select bin...').click();
-        await this.page.getByText('Bin-001-Low — Low-Level').click();
+        await this.page.getByText('Bin-001-Medium — Medium-Level').click();
 
         await this.page.locator('[id="_r_20_"]').fill('2026-06-25');
 
