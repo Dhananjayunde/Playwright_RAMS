@@ -25,16 +25,10 @@ for (const data of testData) {
         });
 
         test('Waste Management Create', { timeout: 60000 }, async () => {
-             
-            waste = new WasteManagementPage(page);
-
-            await waste.fillWasteEntry();
+            await waste.createWasteEntry();
         });
 
         test('Waste Management Move to Low Level', { timeout: 60000 }, async () => {
-         
-            waste = new WasteManagementPage(page);
-
             await waste.moveWasteToLowLevel();
         });
     });
