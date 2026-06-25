@@ -33,7 +33,11 @@ class LoginPage {
         await this.page.waitForLoadState('networkidle');
     }
 
+<<<<<<< HEAD
     async enterOTP(otpCode = '976666') {
+=======
+    async enterOTP(otpCode = '427733') {
+>>>>>>> parent of 20adb1d (changes for new module)
         const otpDigits = otpCode.split('');
         const otpLocators = ['_r_3_', '_r_4_', '_r_5_', '_r_6_', '_r_7_', '_r_8_'];
         
