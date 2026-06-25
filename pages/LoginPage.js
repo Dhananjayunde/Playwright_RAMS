@@ -33,7 +33,7 @@ class LoginPage {
         await this.page.waitForLoadState('networkidle');
     }
 
-    async enterOTP(otpCode = '062707') {
+    async enterOTP(otpCode = '976666') {
         const otpDigits = otpCode.split('');
         const otpLocators = ['_r_3_', '_r_4_', '_r_5_', '_r_6_', '_r_7_', '_r_8_'];
         
