@@ -1,28 +1,38 @@
 {
-  "servers": {
-    "playwright": {
-      "type": "stdio",
-      "sandboxEnabled": false,
-      "command": "npx",
-      "cwd": "${input:cwd}",
-      "args": [
-        "@playwright/mcp@0.0.76"
-      ]
-    },
-    "playwright-test": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "playwright",
-        "run-test-mcp-server"
-      ]
-    }
-  },
-  "inputs": [
-    {
-      "id": "cwd",
-      "type": "promptString",
-      "description": "Working Directory"
-    }
-  ]
+	"servers": {
+		"playwright": {
+			"command": "npx",
+			"args": [
+				"@playwright/mcp@0.0.76",
+				"${input:args}"
+			],
+			"cwd": "${input:cwd}",
+			"sandboxEnabled": false,
+			"dev": {
+				"watch": [],
+				"debug": {}
+			},
+			"type": "stdio"
+		},
+		"playwright-test": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"playwright",
+				"run-test-mcp-server"
+			]
+		}
+	},
+	"inputs": [
+		{
+			"id": "cwd",
+			"type": "promptString",
+			"description": "Working Directory"
+		},
+		{
+			"id": "args",
+			"type": "promptString",
+			"description": "Server Arguments"
+		}
+	]
 }
