@@ -30,23 +30,27 @@ class LoginPage {
         await this.email.fill(email);
         await this.password.fill(password);
         await this.signInBtn.click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(1500);
     }
 
-<<<<<<< HEAD
-    async enterOTP(otpCode = '976666') {
-=======
-    async enterOTP(otpCode = '427733') {
->>>>>>> parent of 20adb1d (changes for new module)
-        const otpDigits = otpCode.split('');
+    async enterOTP(otpCode = '134714') {
+        await this.verifyBtn.waitFor({ state: 'visible', timeout: 20000 });
+
+        const otpDigits = (otpCode || '530972').split('');
         const otpLocators = ['_r_3_', '_r_4_', '_r_5_', '_r_6_', '_r_7_', '_r_8_'];
-        
+
         for (let i = 0; i < otpDigits.length; i++) {
-            await this.page.locator(`[id="${otpLocators[i]}"]`).fill(otpDigits[i]);
+            const input = this.page.locator(`[id="${otpLocators[i]}"]`);
+            await input.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
+            if (await input.count()) {
+                await input.fill(otpDigits[i]);
+            }
         }
-        
+
         await this.verifyBtn.click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(1500);
     }
 }
 

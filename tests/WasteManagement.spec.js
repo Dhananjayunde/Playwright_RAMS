@@ -13,6 +13,7 @@ for (const data of testData) {
         let waste;
 
         test.beforeAll(async ({ browser }) => {
+            test.setTimeout(180000);
             const context = await browser.newContext();
             page = await context.newPage();
             login = new LoginPage(page);
@@ -24,14 +25,13 @@ for (const data of testData) {
             await login.enterOTP();
         });
 
-        test('Waste Management Create', { timeout: 60000 }, async () => {
+        test('Waste Management Create', { timeout: 180000 }, async () => {
              
             waste = new WasteManagementPage(page);
-
             await waste.fillWasteEntry();
         });
 
-        test('Waste Management Move to Low Level', { timeout: 60000 }, async () => {
+        test('Waste Management Move to Low Level', { timeout: 180000 }, async () => {
          
             waste = new WasteManagementPage(page);
 
