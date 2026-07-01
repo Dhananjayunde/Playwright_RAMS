@@ -34,7 +34,7 @@ class LoginPage {
         await this.page.waitForTimeout(1500);
     }
 
-    async enterOTP(otpCode = '134714') {
+    async enterOTP(otpCode = '525447') {
         await this.verifyBtn.waitFor({ state: 'visible', timeout: 20000 });
 
         const otpDigits = (otpCode || '530972').split('');

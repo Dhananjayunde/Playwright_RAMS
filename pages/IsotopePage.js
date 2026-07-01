@@ -3,8 +3,9 @@ class IsotopePage {
     constructor(page) {
 
         this.page = page;
+        this.lastCreatedIsotope = null;
 
-        this.isotopeDatabaseModule =
+this.isotopeDatabaseModule =
             page.locator('//*[@id="root"]/div/div/aside/div[2]/div[2]/div[2]/div/div/div[1]/p');
         
         this.addIsotopeBtn =
@@ -16,9 +17,13 @@ class IsotopePage {
             page.getByRole('button', {
                 name: 'Save Isotope'
             });
-    }
+    
+
+  }
 
     async addIsotope() {
+
+
         await this.isotopeDatabaseModule.click();
         
         await this.addIsotopeBtn.click();
@@ -59,6 +64,44 @@ class IsotopePage {
 
         await this.saveBtn.click();
     }
+
+    async deactivateIsotope() {
+
+       const firstToggle =
+    this.page.locator('tbody tr').first().getByRole('checkbox');
+
+await firstToggle.click();
+
+await this.page.getByRole('button', {
+    name: 'Confirm Deactivate'
+}).click();
+await this.page.getByText('Isotope deactivated', { exact: true })
+
+    }
+      async activateIsotope() {
+
+    await this.page.getByText('Inactive').click();
+
+    const firstToggle =
+        this.page.locator('tbody tr').first().getByRole('checkbox');
+
+    await firstToggle.click();
+   await this.page.getByText('Isotope activated', { exact: true })
+
 }
 
-module.exports = { IsotopePage };
+
+
+   
+    async halfLifeFilter() {
+
+        await this.page.getByText(/Short T½/i).click();
+        await this.page.getByText(/Long T½/i).click();
+
+    }
+
+}   
+
+module.exports = {
+    IsotopePage
+};
