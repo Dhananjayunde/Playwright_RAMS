@@ -37,8 +37,8 @@ export default defineConfig({
    browserName:'chromium',
   headless:false,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    storageState:
-        'playwright/.auth/user.json',
+    // storageState:
+    //     'playwright/.auth/user.json',
 
     trace: 'on',
     screenshot:'on',
