@@ -1,110 +1,285 @@
-class WasteManagementPage {
+const BasePage = require('./BasePage');
+class WasteManagementPage extends BasePage {
 
     constructor(page) {
-        this.page = page;
+
+        super(page);
+        this.wasteManagementMenu =
+            page.getByText('Waste Management', { exact: true }).first();
+
+        this.addWasteEntryBtn =
+            page.getByText('Add Waste Entry', { exact: true }).first();
+
+        this.receivingLog =
+            page.getByText(/Select receiving log entry/i).first();
+
+        this.receivingLogOption =
+            page.getByText(/-06-22/i).first();
+
+        this.bin =
+            page.getByText(/Select bin/i).first();
+
+        this.highLevelBin =
+            page.getByRole('option', {
+                name: /Bin-001-High/i
+            });
+
+        this.entryDate =
+            page.locator('input[name="entryDate"]');
+
+        this.activity =
+            page.getByPlaceholder('e.g. 85');
+
+        this.instrument =
+            page.getByText(/Select instrument/i).first();
+
+        this.instrumentOption =
+            page.getByRole('option', {
+                name: /sn123/i
+            });
+
+        this.method =
+            page.getByRole('combobox', {
+                name: /Select method/i
+            });
+
+        this.methodOption =
+            page.getByRole('option', {
+                name: /Dose Calibrator/i
+            });
+
+        this.location =
+            page.getByText(/Select location/i).first();
+
+        this.locationOption =
+            page.getByRole('option', {
+                name: /Cold Room/i
+            });
+
+        this.scTextbox =
+            page.getByRole('textbox', {
+                name: 'e.g. SC'
+            });
+
+        this.observation =
+            page.getByRole('textbox', {
+                name: 'Additional observations...'
+            });
+
+        this.continueBtn =
+            page.getByRole('button', {
+                name: 'Continue to E-Signature'
+            });
+
+        this.approveText =
+            page.getByText('I approve this record');
+
+        this.approveOption =
+            page.getByRole('option', {
+                name: 'I approve this record'
+            });
+
+        this.password =
+            page.getByRole('textbox', {
+                name: 'Enter your account password'
+            });
+
+        this.confirmBtn =
+            page.getByRole('button').nth(1);
+
+        this.signCommit =
+            page.getByRole('button', {
+                name: /Sign & Commit/i
+            });
+
+        this.successToast =
+            page.getByText(/Waste entry created/i).first();
+
+        this.closeToast =
+            page.locator('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit').first();
+
+        this.moveBtn =
+            page.getByRole('button', {
+                name: 'Move'
+            }).first();
+
+        this.lowLevelBin =
+            page.getByRole('option')
+                .filter({
+                    hasText: /Low-Level|Low/i
+                }).first();
+
+        this.transferDate =
+            page.getByLabel(/Date|Transfer Date|Entry Date/i).first();
+
+        this.reason =
+            page.getByText(/Select reason/i);
+
+        this.otherReason =
+            page.getByRole('option', {
+                name: /other/i
+            });
+
+        this.transferObservation =
+            page.getByRole('textbox', {
+                name: 'Transfer observations...'
+            });
+
+        this.transferToast =
+            page.getByText(/Waste entry transferred/i).first();
     }
 
     async waitForAppReady() {
+
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(1000);
+
     }
 
     async navigateToWasteManagement() {
-        const menuItem = this.page.getByText('Waste Management', { exact: true }).first();
-        await menuItem.waitFor({ state: 'visible', timeout: 20000 });
-        await menuItem.click();
+
+        await this.wasteManagementMenu.waitFor({
+            state: 'visible',
+            timeout: 20000
+        });
+
+        await this.actions.click(this.wasteManagementMenu);
+
         await this.page.waitForTimeout(2000);
-        await this.page.getByText('Add Waste Entry', { exact: true }).first().waitFor({ state: 'visible', timeout: 20000 });
+
+        await this.addWasteEntryBtn.waitFor({
+            state: 'visible',
+            timeout: 20000
+        });
+
     }
 
     async fillWasteEntry() {
+
         await this.navigateToWasteManagement();
 
-        await this.page.getByText('Add Waste Entry', { exact: true }).first().click();
-        await this.page.getByText(/Select receiving log entry/i).first().waitFor({ state: 'visible', timeout: 10000 });
+        await this.actions.click(this.addWasteEntryBtn);
+
+        await this.receivingLog.waitFor({
+            state: 'visible',
+            timeout: 10000
+        });
+
         await this.waitForAppReady();
 
-        await this.page.getByText(/Select receiving log entry/i).first().click();
-        await this.page.getByText(/-06-22/i).first().click();
+        await this.actions.click(this.receivingLog);
 
-        await this.page.getByText(/Select bin/i).first().click();
-        await this.page.getByRole('option', { name: /Bin-001-High/i }).click();
+        await this.actions.click(this.receivingLogOption);
 
-        await this.page.locator('input[name="entryDate"]').fill('2026-06-25');
-        await this.page.getByPlaceholder('e.g. 85').click();
-        await this.page.getByPlaceholder('e.g. 85').fill('87');
+        await this.actions.click(this.bin);
 
-        await this.page.getByText(/Select instrument/i).first().click();
-        await this.page.getByRole('option', { name: /sn123/i }).click();
+        await this.actions.click(this.highLevelBin);
 
-        await this.page.getByRole('combobox', { name: /Select method/i }).click();
-        await this.page.getByRole('option', { name: /Dose Calibrator/i }).click();
+        await this.actions.fill(this.entryDate, '2026-06-25');
 
-        await this.page.getByText(/Select location/i).first().click();
-        await this.page.getByRole('option', { name: /Cold Room/i }).click();
+        await this.actions.fill(this.activity, '87');
 
-        await this.page.getByRole('textbox', { name: 'e.g. SC' }).click();
-        await this.page.getByRole('textbox', { name: 'e.g. SC' }).fill('SC');
+        await this.actions.click(this.instrument);
 
-        await this.page.getByRole('textbox', { name: 'Additional observations...' }).click();
-        await this.page.getByRole('textbox', { name: 'Additional observations...' }).fill('No Observation for now');
+        await this.actions.click(this.instrumentOption);
 
-        await this.page.getByRole('button', { name: 'Continue to E-Signature' }).click();
+        await this.actions.click(this.method);
+
+        await this.actions.click(this.methodOption);
+
+        await this.actions.click(this.location);
+
+        await this.actions.click(this.locationOption);
+
+        await this.actions.fill(this.scTextbox, 'SC');
+
+        await this.actions.fill(
+            this.observation,
+            'No Observation for now'
+        );
+
+        await this.actions.click(this.continueBtn);
+
         await this.page.waitForLoadState('networkidle');
 
-        await this.page.getByText('I approve this record').click();
-        await this.page.getByRole('option', { name: 'I approve this record' }).click();
+        await this.actions.click(this.approveText);
 
-        await this.page.getByRole('textbox', { name: 'Enter your account password' }).click();
-        await this.page.getByRole('textbox', { name: 'Enter your account password' }).fill('Futran#3');
+        await this.actions.click(this.approveOption);
 
-        await this.page.getByRole('button').nth(1).click();
-        await this.page.getByRole('button', { name: /Sign & Commit/i }).click();
+        await this.actions.fill(
+            this.password,
+            'Futran#3'
+        );
 
-        await this.page.getByText(/Waste entry created/i).first().waitFor({ state: 'visible', timeout: 20000 });
-        await this.page.getByText(/Waste entry created/i).first().click();
-        await this.page.locator('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit').first().click();
+        await this.actions.click(this.confirmBtn);
+
+        await this.actions.click(this.signCommit);
+
+        await this.successToast.waitFor({
+            state: 'visible',
+            timeout: 20000
+        });
+
+        await this.actions.click(this.successToast);
+
+        await this.actions.click(this.closeToast);
+
     }
 
     async moveWasteToLowLevel() {
-        
-        await this.page.getByRole('button', { name: 'Move' }).first().click();
+
+        await this.actions.click(this.moveBtn);
         await this.waitForAppReady();
+        await this.actions.click(this.bin);
+        await this.actions.click(this.lowLevelBin);
 
-        await this.page.getByText(/Select bin/i).click();
-        await this.page.getByRole('option').filter({ hasText: /Low-Level|Low/i }).first().click();
+        if (await this.transferDate.count()) {
 
-        const dateInput = this.page.getByLabel(/Date|Transfer Date|Entry Date/i).first();
-        await dateInput.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
-        if (await dateInput.count()) {
-            await dateInput.fill('2026-06-25').catch(() => {});
+            await this.transferDate.fill('2026-06-25')
+                .catch(() => {});
+
         }
+        await this.actions.fill(
+            this.scTextbox,
+            'SC1'
+        );
 
-        await this.page.getByRole('textbox', { name: 'e.g. SC' }).click();
-        await this.page.getByRole('textbox', { name: 'e.g. SC' }).fill('SC1');
+        await this.actions.click(this.reason);
 
-        await this.page.getByText(/Select reason/i).click();
-        await this.page.getByRole('option', { name: /other/i }).click();
+        await this.actions.click(this.otherReason);
 
-        await this.page.getByRole('textbox', { name: 'Transfer observations...' }).click();
-        await this.page.getByRole('textbox', { name: 'Transfer observations...' }).fill('No Specific observation for now ');
+        await this.actions.fill(
+            this.transferObservation,
+            'No Specific observation for now'
+        );
 
-        await this.page.getByRole('button', { name: 'Continue to E-Signature' }).click();
+        await this.actions.click(this.continueBtn);
+
         await this.page.waitForLoadState('networkidle');
 
-        await this.page.getByText('I approve this record').click();
-        await this.page.getByRole('option', { name: 'I approve this record' }).click();
+        await this.actions.click(this.approveText);
 
-        await this.page.getByRole('textbox', { name: 'Enter your account password' }).click();
-        await this.page.getByRole('textbox', { name: 'Enter your account password' }).fill('Futran#3');
+        await this.actions.click(this.approveOption);
 
-        await this.page.getByRole('button').nth(1).click();
-        await this.page.getByRole('button', { name: /Sign & Commit/i }).click();
+        await this.actions.fill(
+            this.password,
+            'Futran#3'
+        );
+        await this.actions.click(this.confirmBtn);
 
-        await this.page.getByText(/Waste entry transferred/i).first().waitFor({ state: 'visible', timeout: 20000 });
-        await this.page.getByText(/Waste entry transferred/i).first().click();
-        await this.page.locator('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit').first().click();
+        await this.actions.click(this.signCommit);
+
+        await this.transferToast.waitFor({
+            state: 'visible',
+            timeout: 20000
+        });
+
+        await this.actions.click(this.transferToast);
+
+        await this.actions.click(this.closeToast);
+
     }
+
 }
 
 module.exports = { WasteManagementPage };

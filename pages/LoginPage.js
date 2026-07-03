@@ -1,57 +1,83 @@
-class LoginPage {
+const BasePage = require('./BasePage');
+const CONSTANTS = require('../config/constants');
+
+class LoginPage extends BasePage {
 
     constructor(page) {
 
-        this.page = page;
-        this.email = page.getByRole('textbox', {
-            name: 'Email'
+       super(page);
+    this.emailTxt = page.getByRole('textbox', {
+        name: 'Email'
+    });
+
+    this.passwordTxt = page.getByRole('textbox', {
+        name: 'Password'
+    });
+
+    this.signInBtn = page.getByRole('button', {
+            name: CONSTANTS.BUTTONS.SIGN_IN
         });
 
-        this.password = page.getByRole('textbox', {
-            name: 'Password'
+    this.verifyBtn = page.getByRole('button', {
+            name: CONSTANTS.BUTTONS.VERIFY_CONTINUE
         });
 
-        this.signInBtn = page.getByRole('button', {
-            name: 'Sign in'
-        });
-
-        this.verifyBtn = page.getByRole('button', {
-            name: 'Verify & Continue'
-        });
     }
 
     async goTO() {
+
         await this.page.goto('/login');
         await this.page.waitForLoadState('networkidle');
+
     }
 
     async login(email, password) {
-        await this.email.waitFor({ state: 'visible', timeout: 15000 });
-        await this.email.fill(email);
-        await this.password.fill(password);
-        await this.signInBtn.click();
+
+await this.actions.fill(this.emailTxt, email);
+await this.actions.fill(this.passwordTxt, password);
+        await this.actions.click(this.signInBtn);
+
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(1500);
+
+        await this.actions.wait(2);
+
     }
 
-    async enterOTP(otpCode = '896097') {
-        await this.verifyBtn.waitFor({ state: 'visible', timeout: 20000 });
+    async enterOTP(otpCode = '631613') {
 
-        const otpDigits = (otpCode || '530972').split('');
-        const otpLocators = ['_r_3_', '_r_4_', '_r_5_', '_r_6_', '_r_7_', '_r_8_'];
+        await this.actions.waitForVisible(this.verifyBtn);
+
+        const otpDigits = (otpCode || '321735').split('');
+
+        const otpLocators = [
+            '_r_3_',
+            '_r_4_',
+            '_r_5_',
+            '_r_6_',
+            '_r_7_',
+            '_r_8_'
+        ];
 
         for (let i = 0; i < otpDigits.length; i++) {
+
             const input = this.page.locator(`[id="${otpLocators[i]}"]`);
-            await input.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
-            if (await input.count()) {
+
+            if (await input.isVisible().catch(() => false)) {
+
                 await input.fill(otpDigits[i]);
+
             }
+
         }
 
-        await this.verifyBtn.click();
+        await this.actions.click(this.verifyBtn);
+
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(1500);
+
+        await this.actions.wait(2);
+
     }
+
 }
 
 module.exports = { LoginPage };

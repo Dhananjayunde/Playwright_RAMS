@@ -1,52 +1,113 @@
-class TrackingPage {
+const BasePage = require('../pages/BasePage');
+
+class TrackingPage extends BasePage {
 
     constructor(page) {
-        this.page = page;
+
+        super(page);
+      
+        // Navigation
+        this.trackingMenu = page.locator('aside').getByText('Tracking', { exact: true });
+
+        // Buttons
+        this.addShipmentBtn = page.getByRole('button', { name: '+ Add Shipment' });
+        this.saveShipmentBtn = page.getByRole('button', { name: 'Save Shipment' });
+
+        // Shipment Type
+        this.shipmentType = page.getByRole('combobox', { name: 'Incoming' });
+        this.outgoingOption = page.getByRole('option', { name: 'Outgoing' });
+
+        // Fields
+        this.orderDate = page.locator('input[name="orderDate"]');
+
+        this.trackingNumber = page.getByRole('textbox', {
+            name: 'e.g. 1Z999AA10123456784'
+        });
+
+        this.description = page.getByRole('textbox', {
+            name: 'e.g. Tc-99m 2450 MBq'
+        });
+
+        this.isotope = page.getByRole('combobox', {
+            name: 'Select isotope'
+        });
+
+        this.isotopeOption = page.getByRole('option', {
+            name: 'Ag-111 — Silver'
+        });
+
+        this.unit = page.getByRole('combobox', {
+            name: 'Select unit'
+        });
+
+        this.unitOption = page.getByRole('option', {
+            name: 'Ci',
+            exact: true
+        });
+
+        this.activity = page.getByPlaceholder('e.g. 66.2');
+
+        this.sender = page.getByRole('textbox', {
+            name: 'e.g. Cardinal Health'
+        });
+
+        this.receiver = page.getByRole('textbox', {
+            name: 'e.g. University Hospital'
+        });
+
+        this.courier = page.getByRole('combobox', {
+            name: 'FedEx'
+        });
+
+        this.courierOption = page.getByRole('option', {
+            name: 'BioMedical Courier'
+        });
+
+        this.trackingUrl = page.getByRole('textbox', {
+            name: 'https://'
+        });
     }
 
     async fillTrackingEntry() {
 
         await this.page.waitForLoadState('networkidle');
 
-        await this.page.locator('aside').getByText('Tracking', { exact: true }).click();
+        await this.actions.click(this.trackingMenu);
+
         await this.page.waitForLoadState('networkidle');
 
-        await this.page.getByRole('button', { name: '+ Add Shipment' }).first().click();
+        await this.actions.click(this.addShipmentBtn);
+
         await this.page.waitForLoadState('networkidle');
 
-        await this.page.getByRole('combobox', { name: 'Incoming' }).click();
-        await this.page.getByRole('option', { name: 'Outgoing' }).click();
+        await this.actions.click(this.shipmentType);
+        await this.actions.click(this.outgoingOption);
 
-        await this.page.locator('input[name="orderDate"]').fill('2026-06-25');
+        await this.actions.fill(this.orderDate, '2026-06-25');
 
-        await this.page.getByRole('textbox', { name: 'e.g. 1Z999AA10123456784' }).click();
-        await this.page.getByRole('textbox', { name: 'e.g. 1Z999AA10123456784' }).fill('IZ123456789');
+        await this.actions.fill(this.trackingNumber, 'IZ123456789');
 
-        await this.page.getByRole('textbox', { name: 'e.g. Tc-99m 2450 MBq' }).click();
-        await this.page.getByRole('textbox', { name: 'e.g. Tc-99m 2450 MBq' }).fill('TC-123456789');
+        await this.actions.fill(this.description, 'TC-123456789');
 
-        await this.page.getByRole('combobox', { name: 'Select isotope' }).click();
-        await this.page.getByRole('option', { name: 'Ag-111 — Silver' }).click();
+        await this.actions.click(this.isotope);
+        await this.actions.click(this.isotopeOption);
 
-        await this.page.getByRole('combobox', { name: 'Select unit' }).click();
-        await this.page.getByRole('option', { name: 'Ci', exact: true }).click();
+        await this.actions.click(this.unit);
+        await this.actions.click(this.unitOption);
 
-        await this.page.getByPlaceholder('e.g. 66.2').click();
-        await this.page.getByPlaceholder('e.g. 66.2').fill('65.1');
+        await this.actions.fill(this.activity, '65.1');
 
-        await this.page.getByRole('textbox', { name: 'e.g. Cardinal Health' }).click();
-        await this.page.getByRole('textbox', { name: 'e.g. Cardinal Health' }).fill('Cardlian Health');
+        await this.actions.fill(this.sender, 'Cardlian Health');
 
-        await this.page.getByRole('textbox', { name: 'e.g. University Hospital' }).click();
-        await this.page.getByRole('textbox', { name: 'e.g. University Hospital' }).fill('Pune Hospital');
+        await this.actions.fill(this.receiver, 'Pune Hospital');
 
-        await this.page.getByRole('combobox', { name: 'FedEx' }).click();
-        await this.page.getByRole('option', { name: 'BioMedical Courier' }).click();
+        await this.actions.click(this.courier);
+        await this.actions.click(this.courierOption);
 
-        await this.page.getByRole('textbox', { name: 'https://' }).click();
-        await this.page.getByRole('textbox', { name: 'https://' }).fill('http://dev.com');
+        await this.actions.fill(this.trackingUrl, 'http://dev.com');
 
-        await this.page.getByRole('button', { name: 'Save Shipment' }).click();
+        await this.actions.click(this.saveShipmentBtn);
+
         await this.page.waitForLoadState('networkidle');
     }
 }

@@ -1,106 +1,143 @@
-class IsotopePage {
+const BasePage = require('./BasePage');
+const CONSTANTS = require('../config/constants');
+const TestDataManager = require('../utils/TestDataManager');
+const isotope =    TestDataManager.getData('isotopeData.json');
+
+class IsotopePage extends BasePage {
 
     constructor(page) {
-
-        this.page = page;
+        super(page);
         this.lastCreatedIsotope = null;
 
-this.isotopeDatabaseModule =
-            page.locator('//*[@id="root"]/div/div/aside/div[2]/div[2]/div[2]/div/div/div[1]/p');
-        
-        this.addIsotopeBtn =
-            page.getByRole('button', {
-                name: 'Add isotope'
-            });
+        this.isotopeDatabaseModule = page.locator(
+            '//*[@id="root"]/div/div/aside/div[2]/div[2]/div[2]/div/div/div[1]/p'
+        );
 
-        this.saveBtn =
-            page.getByRole('button', {
-                name: 'Save Isotope'
-            });
-    
 
-  }
+        this.addIsotopeBtn = page.getByRole('button', {
+            name: CONSTANTS.BUTTONS.ADD_ISOTOPE
+        });
+
+        this.saveBtn = page.getByRole('button', {
+            name: CONSTANTS.BUTTONS.SAVE_ISOTOPE
+        });
+
+        this.confirmDeactivateBtn = page.getByRole('button', {
+            name: CONSTANTS.BUTTONS.CONFIRM_DEACTIVATE
+        });
+
+        this.symbol = page.getByRole('textbox', {
+            name: 'e.g. Lu-177',
+            exact: true
+        });
+
+        this.name = page.getByRole('textbox', {
+            name: CONSTANTS.PLACEHOLDERS.NAME
+        });
+
+        this.weight = page.getByRole('textbox', {
+            name: '177',
+            exact: true
+        });
+
+        this.halfLife = page.getByRole('textbox', {
+            name: 'e.g. 6.647d'
+        });
+
+        this.energy = page.getByRole('textbox', {
+            name: '159.5'
+        });
+
+        this.decayMode = page.getByRole('textbox', {
+            name: 'e.g. β⁻ → Hf-'
+        });
+
+        this.category = page.getByRole('combobox', {
+            name: 'Diagnostic'
+        });
+
+        this.therapeuticOption = page.getByRole('option', {
+            name: 'Therapeutic'
+        });
+
+
+        this.inactiveTab = page.getByText('Inactive');
+
+        this.shortHalfLife = page.getByText(/Short T½/i);
+
+        this.longHalfLife = page.getByText(/Long T½/i);
+
+        this.firstToggle = page
+            .locator('tbody tr')
+            .first()
+            .getByRole('checkbox');
+
+
+        this.deactivateToast = page.getByText(
+            'Isotope deactivated',
+            { exact: true }
+        );
+
+        this.activateToast = page.getByText(
+            'Isotope activated',
+            { exact: true }
+        );
+    }
 
     async addIsotope() {
 
-
         await this.isotopeDatabaseModule.click();
-        
-        await this.addIsotopeBtn.click();
 
-        await this.page.getByRole('textbox', {
-            name: 'e.g. Lu-177',
-            exact: true
-        }).fill('Lu-77');
+        await this.actions.click(this.addIsotopeBtn);
 
-        await this.page.getByRole('textbox', {
-            name: 'e.g. Lutetium-'
-        }).fill('Lu-77');
+        await this.actions.fill(this.symbol,isotope.symbol);
+        await this.actions.fill(this.name, isotope.name);
 
-        await this.page.getByRole('textbox', {
-            name: '177',
-            exact: true
-        }).fill('77');
+        await this.actions.fill(this.weight, isotope.weight);
 
-        await this.page.getByRole('textbox', {
-            name: 'e.g. 6.647d'
-        }).fill('7.7');
+        await this.actions.fill(this.halfLife, isotope.halfLife);
 
-        await this.page.getByRole('textbox', {
-            name: '159.5'
-        }).fill('177.7');
+        await this.actions.fill(this.energy, isotope.energy);
 
-        await this.page.getByRole('textbox', {
-            name: 'e.g. β⁻ → Hf-'
-        }).fill('Hf-77');
+        await this.actions.fill(this.decayMode, isotope.decayMode);
 
-        await this.page.getByRole('combobox', {
-            name: 'Diagnostic'
-        }).click();
+        await this.actions.click(this.category);
 
-        await this.page.getByRole('option', {
-            name: 'Therapeutic'
-        }).click();
+        await this.actions.click(this.therapeuticOption);
 
-        await this.saveBtn.click();
+        await this.actions.click(this.saveBtn);
     }
 
     async deactivateIsotope() {
 
-       const firstToggle =
-    this.page.locator('tbody tr').first().getByRole('checkbox');
+        await this.actions.click(this.firstToggle);
 
-await firstToggle.click();
+        await this.actions.click(this.confirmDeactivateBtn);
 
-await this.page.getByRole('button', {
-    name: 'Confirm Deactivate'
-}).click();
-await this.page.getByText('Isotope deactivated', { exact: true })
+       
+    }
+
+    async activateIsotope() {
+
+        await this.actions.click(this.inactiveTab);
+
+        await this.actions.click(this.firstToggle);
+
+        await this.activateToast.waitFor({
+            state: 'visible'
+        });
 
     }
-      async activateIsotope() {
 
-    await this.page.getByText('Inactive').click();
-
-    const firstToggle =
-        this.page.locator('tbody tr').first().getByRole('checkbox');
-
-    await firstToggle.click();
-   await this.page.getByText('Isotope activated', { exact: true })
-
-}
-
-
-
-   
     async halfLifeFilter() {
 
-        await this.page.getByText(/Short T½/i).click();
-        await this.page.getByText(/Long T½/i).click();
+        await this.shortHalfLife.click();
+
+        await this.longHalfLife.click();
 
     }
 
-}   
+}
 
 module.exports = {
     IsotopePage
