@@ -1,25 +1,45 @@
 const BasePage = require('../pages/BasePage');
+const CONSTANTS = require('../config/constants');
+const TestDataManager = require('../utils/TestDataManager');
+const Logger = require('../utils/Logger');
+
+const tracking = TestDataManager.getData('trackingData.json');
 
 class TrackingPage extends BasePage {
 
     constructor(page) {
 
         super(page);
-      
+
         // Navigation
-        this.trackingMenu = page.locator('aside').getByText('Tracking', { exact: true });
+        this.trackingMenu = page
+            .locator('aside')
+            .getByText(CONSTANTS.MENU.TRACKING, { exact: true });
 
         // Buttons
-        this.addShipmentBtn = page.getByRole('button', { name: '+ Add Shipment' });
-        this.saveShipmentBtn = page.getByRole('button', { name: 'Save Shipment' });
+        this.addShipmentBtn = page
+            .getByRole('button', {
+                name: CONSTANTS.TRACKING.ADD_SHIPMENT
+            })
+            .first();      // <-- Fixed Strict Mode
+
+        this.saveShipmentBtn = page.getByRole('button', {
+            name: CONSTANTS.TRACKING.SAVE
+        });
 
         // Shipment Type
-        this.shipmentType = page.getByRole('combobox', { name: 'Incoming' });
-        this.outgoingOption = page.getByRole('option', { name: 'Outgoing' });
+        this.shipmentType = page.getByRole('combobox', {
+            name: CONSTANTS.TRACKING.INCOMING
+        });
 
-        // Fields
+        this.outgoingOption = page.getByRole('option', {
+            name: CONSTANTS.TRACKING.OUTGOING
+        });
+
+        // Date
         this.orderDate = page.locator('input[name="orderDate"]');
 
+        // Fields
         this.trackingNumber = page.getByRole('textbox', {
             name: 'e.g. 1Z999AA10123456784'
         });
@@ -33,7 +53,7 @@ class TrackingPage extends BasePage {
         });
 
         this.isotopeOption = page.getByRole('option', {
-            name: 'Ag-111 — Silver'
+            name: CONSTANTS.TRACKING.ISOTOPE
         });
 
         this.unit = page.getByRole('combobox', {
@@ -41,7 +61,7 @@ class TrackingPage extends BasePage {
         });
 
         this.unitOption = page.getByRole('option', {
-            name: 'Ci',
+            name: CONSTANTS.TRACKING.UNIT,
             exact: true
         });
 
@@ -60,7 +80,7 @@ class TrackingPage extends BasePage {
         });
 
         this.courierOption = page.getByRole('option', {
-            name: 'BioMedical Courier'
+            name: CONSTANTS.TRACKING.COURIER
         });
 
         this.trackingUrl = page.getByRole('textbox', {
@@ -70,45 +90,62 @@ class TrackingPage extends BasePage {
 
     async fillTrackingEntry() {
 
+        Logger.info('========== Tracking Module Started ==========');
+
         await this.page.waitForLoadState('networkidle');
 
+        Logger.info('Opening Tracking Module');
         await this.actions.click(this.trackingMenu);
 
         await this.page.waitForLoadState('networkidle');
 
+        Logger.info('Clicking Add Shipment');
         await this.actions.click(this.addShipmentBtn);
 
         await this.page.waitForLoadState('networkidle');
 
+        Logger.info('Selecting Shipment Type');
         await this.actions.click(this.shipmentType);
         await this.actions.click(this.outgoingOption);
 
-        await this.actions.fill(this.orderDate, '2026-06-25');
+        Logger.info('Entering Order Date');
+        await this.actions.fill(this.orderDate, tracking.orderDate);
 
-        await this.actions.fill(this.trackingNumber, 'IZ123456789');
+        Logger.info('Entering Tracking Number');
+        await this.actions.fill(this.trackingNumber, tracking.trackingNumber);
 
-        await this.actions.fill(this.description, 'TC-123456789');
+        Logger.info('Entering Description');
+        await this.actions.fill(this.description, tracking.description);
 
+        Logger.info('Selecting Isotope');
         await this.actions.click(this.isotope);
         await this.actions.click(this.isotopeOption);
 
+        Logger.info('Selecting Unit');
         await this.actions.click(this.unit);
         await this.actions.click(this.unitOption);
 
-        await this.actions.fill(this.activity, '65.1');
+        Logger.info('Entering Activity');
+        await this.actions.fill(this.activity, tracking.activity);
 
-        await this.actions.fill(this.sender, 'Cardlian Health');
+        Logger.info('Entering Sender');
+        await this.actions.fill(this.sender, tracking.sender);
 
-        await this.actions.fill(this.receiver, 'Pune Hospital');
+        Logger.info('Entering Receiver');
+        await this.actions.fill(this.receiver, tracking.receiver);
 
+        Logger.info('Selecting Courier');
         await this.actions.click(this.courier);
         await this.actions.click(this.courierOption);
 
-        await this.actions.fill(this.trackingUrl, 'http://dev.com');
+        Logger.info('Entering Tracking URL');
+        await this.actions.fill(this.trackingUrl, tracking.trackingUrl);
 
+        Logger.info('Saving Shipment');
         await this.actions.click(this.saveShipmentBtn);
 
-        await this.page.waitForLoadState('networkidle');
+await this.wait.networkIdle();
+        Logger.info('========== Tracking Module Completed ==========');
     }
 }
 

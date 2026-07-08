@@ -1,37 +1,92 @@
 class WaitUtils {
 
-    static async waitForPage(page) {
+    constructor(page) {
 
-        await page.waitForLoadState('domcontentloaded');
-
-    }
-
-    static async waitForNetwork(page) {
-
-        await page.waitForLoadState('networkidle');
+        this.page = page;
 
     }
 
-    static async wait(locator, timeout = 10000) {
+    async pageReady() {
+
+        await this.page.waitForLoadState('domcontentloaded');
+
+    }
+
+    async networkIdle() {
+
+        await this.page.waitForLoadState('networkidle');
+
+    }
+
+    async visible(locator, timeout = 15000) {
 
         await locator.waitFor({
 
             state: 'visible',
+
             timeout
 
         });
 
     }
 
-    static async shortWait(page) {
+    async hidden(locator, timeout = 15000) {
 
-        await page.waitForTimeout(1000);
+        await locator.waitFor({
+
+            state: 'hidden',
+
+            timeout
+
+        });
 
     }
 
-    static async mediumWait(page) {
+    async attached(locator, timeout = 15000) {
 
-        await page.waitForTimeout(3000);
+        await locator.waitFor({
+
+            state: 'attached',
+
+            timeout
+
+        });
+
+    }
+
+    async detached(locator, timeout = 15000) {
+
+        await locator.waitFor({
+
+            state: 'detached',
+
+            timeout
+
+        });
+
+    }
+
+    async wait(seconds = 1) {
+
+        await this.page.waitForTimeout(seconds * 1000);
+
+    }
+
+    async urlContains(text) {
+
+        await this.page.waitForURL(`**${text}**`);
+
+    }
+
+    async titleContains(text) {
+
+        await this.page.waitForFunction(
+
+            expected => document.title.includes(expected),
+
+            text
+
+        );
 
     }
 

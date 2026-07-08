@@ -7,19 +7,19 @@ class LoginPage extends BasePage {
 
        super(page);
     this.emailTxt = page.getByRole('textbox', {
-        name: 'Email'
+        name: CONSTANTS.LOGIN.EMAIL
     });
 
     this.passwordTxt = page.getByRole('textbox', {
-        name: 'Password'
+        name: CONSTANTS.LOGIN.PASSWORD
     });
 
     this.signInBtn = page.getByRole('button', {
-            name: CONSTANTS.BUTTONS.SIGN_IN
+            name: CONSTANTS.LOGIN.SIGN_IN
         });
 
     this.verifyBtn = page.getByRole('button', {
-            name: CONSTANTS.BUTTONS.VERIFY_CONTINUE
+            name: CONSTANTS.LOGIN.VERIFY
         });
 
     }
@@ -37,13 +37,12 @@ await this.actions.fill(this.emailTxt, email);
 await this.actions.fill(this.passwordTxt, password);
         await this.actions.click(this.signInBtn);
 
-        await this.page.waitForLoadState('domcontentloaded');
-
+await this.wait.pageReady();
         await this.actions.wait(2);
 
     }
 
-    async enterOTP(otpCode = '631613') {
+    async enterOTP(otpCode = '539097') {
 
         await this.actions.waitForVisible(this.verifyBtn);
 
@@ -72,8 +71,8 @@ await this.actions.fill(this.passwordTxt, password);
 
         await this.actions.click(this.verifyBtn);
 
-        await this.page.waitForLoadState('domcontentloaded');
-
+       
+        await this.wait.pageReady();
         await this.actions.wait(2);
 
     }

@@ -1,20 +1,27 @@
 const BasePage = require('./BasePage');
+const CONSTANTS = require('../config/constants');
+const TestDataManager = require('../utils/TestDataManager');
+const Logger = require('../utils/Logger');
+
+const waste = TestDataManager.getData('wasteManagementData.json');
+
 class WasteManagementPage extends BasePage {
 
     constructor(page) {
 
         super(page);
+
         this.wasteManagementMenu =
-            page.getByText('Waste Management', { exact: true }).first();
+            page.getByText(CONSTANTS.WASTE.MENU, { exact: true }).first();
 
         this.addWasteEntryBtn =
-            page.getByText('Add Waste Entry', { exact: true }).first();
+            page.getByText(CONSTANTS.WASTE.ADD_ENTRY, { exact: true }).first();
 
         this.receivingLog =
             page.getByText(/Select receiving log entry/i).first();
 
         this.receivingLogOption =
-            page.getByText(/-06-22/i).first();
+            page.getByText(/07-03/i).first();
 
         this.bin =
             page.getByText(/Select bin/i).first();
@@ -68,20 +75,23 @@ class WasteManagementPage extends BasePage {
 
         this.continueBtn =
             page.getByRole('button', {
-                name: 'Continue to E-Signature'
+                name: CONSTANTS.WASTE.CONTINUE
             });
 
         this.approveText =
-            page.getByText('I approve this record');
+            page.getByText(
+                CONSTANTS.WASTE.APPROVE_TEXT,
+                { exact: true }
+            ).first();
 
         this.approveOption =
             page.getByRole('option', {
-                name: 'I approve this record'
+                name: CONSTANTS.WASTE.APPROVE_TEXT
             });
 
         this.password =
             page.getByRole('textbox', {
-                name: 'Enter your account password'
+                name: CONSTANTS.WASTE.PASSWORD
             });
 
         this.confirmBtn =
@@ -96,7 +106,8 @@ class WasteManagementPage extends BasePage {
             page.getByText(/Waste entry created/i).first();
 
         this.closeToast =
-            page.locator('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit').first();
+            page.locator('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit')
+                .first();
 
         this.moveBtn =
             page.getByRole('button', {
@@ -138,32 +149,29 @@ class WasteManagementPage extends BasePage {
 
     async navigateToWasteManagement() {
 
-        await this.wasteManagementMenu.waitFor({
-            state: 'visible',
-            timeout: 20000
-        });
+        Logger.info('Navigating to Waste Management');
+
+        await this.actions.waitForVisible(this.wasteManagementMenu);
 
         await this.actions.click(this.wasteManagementMenu);
 
-        await this.page.waitForTimeout(2000);
+        await this.actions.wait(2);
 
-        await this.addWasteEntryBtn.waitFor({
-            state: 'visible',
-            timeout: 20000
-        });
+        await this.actions.waitForVisible(this.addWasteEntryBtn);
 
     }
 
     async fillWasteEntry() {
 
+        Logger.info('========== Waste Management Started ==========');
+
         await this.navigateToWasteManagement();
+
+        Logger.info('Opening Add Waste Entry');
 
         await this.actions.click(this.addWasteEntryBtn);
 
-        await this.receivingLog.waitFor({
-            state: 'visible',
-            timeout: 10000
-        });
+        await this.actions.waitForVisible(this.receivingLog);
 
         await this.waitForAppReady();
 
@@ -175,9 +183,15 @@ class WasteManagementPage extends BasePage {
 
         await this.actions.click(this.highLevelBin);
 
-        await this.actions.fill(this.entryDate, '2026-06-25');
+        await this.actions.fill(
+            this.entryDate,
+            waste.entryDate
+        );
 
-        await this.actions.fill(this.activity, '87');
+        await this.actions.fill(
+            this.activity,
+            waste.activity
+        );
 
         await this.actions.click(this.instrument);
 
@@ -191,57 +205,68 @@ class WasteManagementPage extends BasePage {
 
         await this.actions.click(this.locationOption);
 
-        await this.actions.fill(this.scTextbox, 'SC');
+        await this.actions.fill(
+            this.scTextbox,
+            waste.sc
+        );
 
         await this.actions.fill(
             this.observation,
-            'No Observation for now'
+            waste.observation
         );
+
+        Logger.info('Submitting Waste Entry');
 
         await this.actions.click(this.continueBtn);
 
-        await this.page.waitForLoadState('networkidle');
-
+await this.wait.networkIdle();
         await this.actions.click(this.approveText);
 
         await this.actions.click(this.approveOption);
 
         await this.actions.fill(
             this.password,
-            'Futran#3'
+            waste.password
         );
 
         await this.actions.click(this.confirmBtn);
 
         await this.actions.click(this.signCommit);
 
-        await this.successToast.waitFor({
-            state: 'visible',
-            timeout: 20000
-        });
+        await this.actions.waitForVisible(this.successToast);
 
         await this.actions.click(this.successToast);
 
         await this.actions.click(this.closeToast);
 
+        Logger.info('Waste Entry Created Successfully');
+        Logger.info('========== Waste Management Completed ==========');
+
     }
 
     async moveWasteToLowLevel() {
 
+        Logger.info('Moving Waste to Low Level');
+
         await this.actions.click(this.moveBtn);
+
         await this.waitForAppReady();
+
         await this.actions.click(this.bin);
+
         await this.actions.click(this.lowLevelBin);
 
         if (await this.transferDate.count()) {
 
-            await this.transferDate.fill('2026-06-25')
+            await this.transferDate
+                .fill(waste.transferDate)
                 .catch(() => {});
 
         }
+
         await this.actions.fill(
             this.scTextbox,
-            'SC1'
+            waste.transferSC
         );
 
         await this.actions.click(this.reason);
@@ -250,33 +275,34 @@ class WasteManagementPage extends BasePage {
 
         await this.actions.fill(
             this.transferObservation,
-            'No Specific observation for now'
+            waste.transferObservation
         );
+
+        Logger.info('Submitting Waste Transfer');
 
         await this.actions.click(this.continueBtn);
 
-        await this.page.waitForLoadState('networkidle');
-
+        await this.wait.networkIdle();
         await this.actions.click(this.approveText);
 
         await this.actions.click(this.approveOption);
 
         await this.actions.fill(
             this.password,
-            'Futran#3'
+            waste.password
         );
+
         await this.actions.click(this.confirmBtn);
 
         await this.actions.click(this.signCommit);
 
-        await this.transferToast.waitFor({
-            state: 'visible',
-            timeout: 20000
-        });
+        await this.actions.waitForVisible(this.transferToast);
 
         await this.actions.click(this.transferToast);
 
         await this.actions.click(this.closeToast);
+
+        Logger.info('Waste Transfer Completed Successfully');
 
     }
 

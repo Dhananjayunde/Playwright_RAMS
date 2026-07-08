@@ -2,14 +2,12 @@ const CONSTANTS = {
 
     BUTTONS: {
 
-        SIGN_IN: 'Sign in',
-        VERIFY_CONTINUE: 'Verify & Continue',
         ADD_ISOTOPE: 'Add isotope',
         SAVE_ISOTOPE: 'Save Isotope',
         CONFIRM_DEACTIVATE: 'Confirm Deactivate',
         CONTINUE_ESIGN: 'Continue to E-Signature',
-        SIGN_COMMIT: 'Sign & Commit'
-
+        SIGN_COMMIT: 'Sign & Commit',
+              
     },
 
     MENU: {
@@ -59,7 +57,75 @@ const CONSTANTS = {
         SHORT_HALF_LIFE: /Short T½/i,
         LONG_HALF_LIFE: /Long T½/i
 
-    }
+    },
+    LOGIN: {
+    EMAIL: 'Email',
+    PASSWORD: 'Password',
+    SIGN_IN: 'Sign in',
+    VERIFY: 'Verify & Continue'
+},
+TRACKING: {
+
+    MENU: 'Tracking',
+
+    ADD_SHIPMENT: '+ Add Shipment',
+
+    SAVE: 'Save Shipment',
+
+    INCOMING: 'Incoming',
+
+    OUTGOING: 'Outgoing',
+
+    ISOTOPE: 'Ag-111 — Silver',
+
+    UNIT: 'Ci',
+
+    COURIER: 'BioMedical Courier'
+
+},
+WASTE: {
+
+    MENU: 'Waste Management',
+
+    ADD_ENTRY: 'Add Waste Entry',
+
+    CONTINUE: 'Continue to E-Signature',
+
+    SIGN_COMMIT: 'Sign & Commit',
+
+    CREATED: 'Waste entry created',
+
+    TRANSFERRED: 'Waste entry transferred',
+
+    APPROVE_TEXT: 'I approve this record',
+
+    PASSWORD: 'Enter your account password'
+
+},
+RECEIVING_LOG: {
+
+    MENU: 'Receiving Log',
+
+    LOG_RECEIPT: '+ Log Receipt',
+
+    CONTINUE: 'Continue to E-Signature',
+
+    SIGN_COMMIT: 'Sign & Commit',
+
+    CANCEL: 'Cancel',
+
+    PASSWORD: 'Enter your account password',
+
+    ISOTOPE: 'Ag-111 — Silver',
+
+    MANUFACTURER: 'Cardinal Health',
+
+    TIMEZONE: 'ET — Eastern Time',
+
+    STORAGE_LOCATION: 'Testing'
+
+},
+
 };
 
 module.exports = CONSTANTS;
