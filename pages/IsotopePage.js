@@ -13,8 +13,7 @@ class IsotopePage extends BasePage {
 
     this.lastCreatedIsotope = null;
 
-    this.isotopeDatabaseModule = page.locator(
-        '//*[@id="root"]/div/div/aside/div[2]/div[2]/div[2]/div/div/div[1]/p'
+    this.isotopeDatabaseModule = page.locator('//*[@id="root"]/div/div/aside/div[2]/div[2]/div[2]/div/div/div[1]/p'
     );
 
     this.addIsotopeBtn = page.getByRole('button', {

@@ -3,7 +3,6 @@ const BasePage = require('../pages/BasePage');
 const CONSTANTS = require('../config/constants');
 const TestDataManager = require('../utils/TestDataManager');
 const Logger = require('../utils/Logger');
-
 const tracking = TestDataManager.getData('trackingData.json');
 
 class TrackingPage extends BasePage {
@@ -69,20 +68,13 @@ class TrackingPage extends BasePage {
 
         this.closeButton =page.getByTestId('CloseIcon');
         this.cancelButton=page.getByRole('button', { name: /Cancel/i })
-        //==========================================
-        // Shipment Type
-        //==========================================
-
         this.shipmentType = page.getByRole('combobox').first();
-
         this.outgoingOption = page.getByRole('option', {
             name: 'Outgoing'
         });
-
         this.incomingOption = page.getByRole('option', {
             name: 'Incoming'
         });
-
         this.orderDate = page.locator(
             'input[name="orderDate"]'
         );
@@ -146,8 +138,6 @@ this.editButton = page
     .locator('button')
     .last();
 
-// Pagination
-
 this.nextPageButton = page.getByRole('button', {
     name: /Go to next page/i
 });
@@ -160,12 +150,43 @@ this.rowsPerPageDropdown = page.getByRole('combobox', {
     name: /Rows per page/i
 });
 
-// Tracking Link
+this.validationMessages = page.locator('.MuiFormHelperText-root');
 
-this.trackPackageLink = page.getByRole('link', {
-    name: /Track package/i
-}).first();
-    }
+this.trackingNumberRequired = page.getByText('Tracking number is required');
+
+this.materialDescriptionRequired = page.getByText('Material description is required');
+
+this.isotopeRequired = page.getByText('Isotope is required');
+
+this.quantityRequired = page.getByText('Quantity is required');
+
+this.trackingTable = page.locator('table');
+
+this.trackPackageLink = page.locator('tbody a').first();
+
+this.incomingCount = this.getDashboardCard('Incoming Total').locator('p').nth(1);
+
+this.outgoingCount = this.getDashboardCard('Outgoing Total').locator('p').nth(1);
+
+this.inTransitCount = this.getDashboardCard('In Transit').locator('p').nth(1);
+
+this.deliveredCount = this.getDashboardCard('Delivered').locator('p').nth(1);
+
+this.editDescription = page.getByRole('textbox', {
+    name: 'e.g. Tc-99m 2450 MBq'
+});
+
+this.editSenderTextbox = page.getByRole('textbox', {
+    name: 'e.g. Cardinal Health'
+});
+
+this.editReceiverTextbox = page.getByRole('textbox', {
+    name: 'e.g. University Hospital'
+});
+
+this.editQuantityTextbox = page.getByPlaceholder('e.g. 66.2');
+
+}
 
 
     async openTrackingModule() {
@@ -291,7 +312,6 @@ this.trackPackageLink = page.getByRole('link', {
 
         Logger.info('Changing Status To In Transit');
 
-        // Skip completed shipments
         const statusDropdown = this.page
             .locator('tbody tr')
             .filter({
@@ -330,7 +350,6 @@ this.trackPackageLink = page.getByRole('link', {
 
     }
 
-
     async openIncomingTab() {
 
         Logger.info('Incoming Tab');
@@ -340,7 +359,6 @@ this.trackPackageLink = page.getByRole('link', {
         await expect(this.incomingTab).toBeVisible();
 
     }
-
     async openOutgoingTab() {
 
         Logger.info('Outgoing Tab');
@@ -350,7 +368,6 @@ this.trackPackageLink = page.getByRole('link', {
         await expect(this.outgoingTab).toBeVisible();
 
     }
-
     async editShipment() {
 
         Logger.info('Edit Shipment');
@@ -368,8 +385,6 @@ this.trackPackageLink = page.getByRole('link', {
         await this.closeButton.click();
 
     }
-
-
     async clickNextPage() {
 
         Logger.info('Next Page');
@@ -383,9 +398,7 @@ this.trackPackageLink = page.getByRole('link', {
             await next.click();
 
         }
-
     }
-
     async clickPreviousPage() {
 
         Logger.info('Previous Page');
@@ -401,7 +414,6 @@ this.trackPackageLink = page.getByRole('link', {
         }
 
     }
-
     async verifyShipmentTable() {
 
         Logger.info('Verify Shipment Table');
@@ -411,7 +423,6 @@ this.trackPackageLink = page.getByRole('link', {
         ).toBeVisible();
 
     }
-
     async verifyShipmentColumns() {
 
         Logger.info('Verify Shipment Columns');
@@ -494,52 +505,10 @@ this.trackPackageLink = page.getByRole('link', {
 
     }
 
-async verifyShipmentTable() {
 
-    Logger.info('Verify Shipment Table');
-
-    await expect(this.shipmentTable).toBeVisible();
-
-
-}
-async verifyShipmentColumns() {
-
-    const columns = [
-        'ID',
-        'Order Date',
-        'Tracking #',
-        'Material',
-        'Isotope',
-        'Quantity',
-        'Destination',
-        'Courier',
-        'Status',
-        'Actions'
-    ];
-
-    for (const column of columns) {
-
-        await expect(
-            this.page.getByRole('columnheader', {
-                name: column
-            })
-        ).toBeVisible();
-
-    }
-
-}
 async verifyShipmentRecords() {
 
     await expect(this.tableRows.first()).toBeVisible();
-
-}
-async editShipment() {
-
-    await this.editButton.click();
-
-    await expect(this.saveShipmentBtn).toBeVisible();
-
-    await this.closeButton.click();
 
 }
 async openEditShipment() {
@@ -549,7 +518,7 @@ async openEditShipment() {
 }
 async closeEditShipment() {
 
-    await this.closeButton.click();
+    await this.cancelButton.click();
 
     await expect(this.pageTitle).toBeVisible();
 
@@ -569,24 +538,6 @@ async verifyNoRecordsFound() {
 
     await expect(
         this.page.getByText('No shipments found')).toBeVisible();
-
-}
-async clickNextPage() {
-
-    if (await this.nextPageButton.isEnabled()) {
-
-        await this.nextPageButton.click();
-
-    }
-
-}
-async clickPreviousPage() {
-
-    if (await this.previousPageButton.isEnabled()) {
-
-        await this.previousPageButton.click();
-
-    }
 
 }
 async changeRowsPerPage(value) {
@@ -665,7 +616,168 @@ async verifyInvalidTrackingURL() {
     await this.saveShipmentBtn.click();
 
 }
+async verifyDashboardCounts() {
+    await expect(this.incomingCount).toBeVisible();
+    await expect(this.outgoingCount).toBeVisible();
+    await expect(this.inTransitCount).toBeVisible();
+    await expect(this.deliveredCount).toBeVisible();
+}
 
+async verifyTrackingTable() {
+    await expect(this.trackingTable).toBeVisible();
+}
+
+async verifyTableHeaders() {
+
+    const headers = [
+        'ID',
+        'Order Date',
+        'Tracking #',
+        'Material',
+        'Isotope',
+        'Quantity',
+        'Courier',
+        'Status',
+        'Actions'
+    ];
+
+    for (const header of headers) {
+        await expect(this.page.getByRole('columnheader', { name: header })).toBeVisible();
+    }
+}
+
+async verifyValidTrackingURL() {
+    await expect(this.trackPackageLink).toHaveAttribute('href', /http/);
+}
+
+async verifyCancelButton() {
+    await this.addShipmentBtn.click();
+    await this.cancelButton.click();
+    await expect(this.pageTitle).toBeVisible();
+}
+
+async verifyCloseButton() {
+    await this.addShipmentBtn.click();
+    await this.closeButton.click();
+    await expect(this.pageTitle).toBeVisible();
+}
+
+async verifyDefaultShipmentType() {
+    await this.addShipmentBtn.click();
+    await expect(this.shipmentType).toContainText('Incoming');
+    await this.cancelButton.click();
+}
+
+async verifyDefaultOrderDate() {
+    await this.addShipmentBtn.click();
+    await expect(this.orderDate).toHaveValue(/\d{4}-\d{2}-\d{2}/);
+    await this.cancelButton.click();
+}
+
+async editShipmentDescription() {
+
+    Logger.info('Edit Shipment Description');
+
+    await this.openEditShipment();
+
+    const updatedDescription = `Updated Material ${Date.now()}`;
+
+    await this.editDescription.clear();
+
+    await this.editDescription.fill(updatedDescription);
+
+    await this.saveShipment();
+
+    await expect(this.page.locator('tbody'))
+        .toContainText(updatedDescription);
+
+}
+async editSender() {
+
+    Logger.info('Edit Sender');
+
+    await this.openEditShipment();
+
+    const updatedSender = `Sender ${Date.now()}`;
+
+    await this.editSenderTextbox.clear();
+
+    await this.editSenderTextbox.fill(updatedSender);
+
+    await this.saveShipment();
+
+    await expect(this.page.locator('tbody'))
+        .toContainText(updatedSender);
+
+}
+async editReceiver() {
+
+    Logger.info('Edit Receiver');
+
+    await this.openEditShipment();
+
+    const updatedReceiver = `Receiver ${Date.now()}`;
+
+    await this.editReceiverTextbox.clear();
+
+    await this.editReceiverTextbox.fill(updatedReceiver);
+
+    await this.saveShipment();
+
+    await expect(this.page.locator('tbody')).toContainText(updatedReceiver);
+
+}
+async editQuantity() {
+
+    Logger.info('Edit Quantity');
+
+    await this.openEditShipment();
+
+    const updatedQuantity = '99.9';
+
+    await this.editQuantityTextbox.clear();
+
+    await this.editQuantityTextbox.fill(updatedQuantity);
+
+    await this.saveShipment();
+
+    await expect(this.page.locator('tbody'))
+        .toContainText(updatedQuantity);
+
+}
+async saveEditedShipment() {
+
+    Logger.info('Save Edited Shipment');
+
+    await this.saveShipmentBtn.click();
+
+    await expect(this.saveShipmentBtn).toBeHidden();
+
+    await expect(this.pageTitle).toBeVisible();
+
+}
+async verifyOutgoingShipmentAdded() {
+
+    Logger.info('Verify Outgoing Shipment Added');
+
+    await this.openOutgoingTab();
+
+    await this.searchShipment(tracking.trackingNumber);
+
+    await expect(this.tableRows.first()).toContainText(tracking.trackingNumber);
+
+}
+async verifyIncomingShipmentAdded() {
+
+    Logger.info('Verify Incoming Shipment Added');
+
+    await this.openIncomingTab();
+
+    await this.searchShipment(tracking.trackingNumber);
+
+    await expect(this.tableRows.first()).toContainText(tracking.trackingNumber);
+
+}
 }
 
 module.exports = {
