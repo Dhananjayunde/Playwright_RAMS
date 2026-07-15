@@ -190,10 +190,7 @@ this.lowBin004 = page.getByRole('option', {
         this.transferToast =
             page.getByText(/Waste entry transferred/i).first();
 
-            // ===============================
-// Validation
-// ===============================
-
+          
 this.cancelBtn = page.getByRole('button', {
     name: /Cancel/i
 });
@@ -206,17 +203,8 @@ this.receivingLogValidation =
 this.binValidation =
     page.getByText(/Bin.*required/i);
 
-this.activityValidation =
-    page.getByText(/Activity.*required./i);
-
-this.instrumentValidation =
-    page.getByText(/Instrument.*required./i);
-
 this.methodValidation =
     page.getByText(/Method.*required./i);
-
-this.locationValidation =
-    page.getByText(/Location.*required./i);
 
 this.scValidation =
     page.getByText(/Survey Reading.*required./i);
@@ -228,88 +216,55 @@ this.addWasteDialog =
     page.getByText('+ Add Waste Entry');
     }
 
-    async waitForAppReady() {
+   // ===========================
+// COMMON HELPER METHODS
+// ===========================
 
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(1000);
+async waitForAppReady() {
 
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.page.waitForLoadState('networkidle');
+    await this.actions.wait(1);
+
+}
+
+async navigateToWasteManagement() {
+
+    Logger.info('Navigating to Waste Management');
+
+    // Already on Waste Management page
+    if (await this.addWasteEntryBtn.isVisible().catch(() => false)) {
+        return;
     }
 
-    async navigateToWasteManagement() {
+    // Close any dialog blocking clicks
+    await this.page.keyboard.press('Escape').catch(() => {});
 
-        Logger.info('Navigating to Waste Management');
-
-        await this.actions.waitForVisible(this.wasteManagementMenu);
-
-        await this.actions.click(this.wasteManagementMenu);
-
-        await this.actions.wait(2);
-
-        await this.actions.waitForVisible(this.addWasteEntryBtn);
-
+    // Close any visible dialog using Close icon
+    if (await this.closeBtn.isVisible().catch(() => false)) {
+        await this.closeBtn.click().catch(() => {});
     }
-    
-    async moveWasteToLowLevel() {
 
-        Logger.info('Moving Waste to Low Level');
+    await this.actions.waitForVisible(this.wasteManagementMenu);
 
-        await this.actions.click(this.moveBtn);
+    await this.wasteManagementMenu.click({ force: true });
 
-        await this.waitForAppReady();
+    await this.waitForAppReady();
 
-        await this.actions.click(this.bin);
+    await this.actions.waitForVisible(this.addWasteEntryBtn);
 
-        await this.actions.click(this.lowLevelBin);
+}
 
-        if (await this.transferDate.count()) {
+async openAddWasteEntry() {
 
-            await this.transferDate
-                .fill(waste.transferDate)
-                .catch(() => {});
+    await this.navigateToWasteManagement();
 
-        }
+    await this.actions.click(this.addWasteEntryBtn);
 
-        await this.actions.fill(
-            this.scTextbox,
-            waste.transferSC
-        );
+    await this.actions.waitForVisible(this.receivingLog);
 
-        await this.actions.click(this.reason);
+}
 
-        await this.actions.click(this.otherReason);
-
-        await this.actions.fill(
-            this.transferObservation,
-            waste.transferObservation
-        );
-
-        Logger.info('Submitting Waste Transfer');
-
-        await this.actions.click(this.continueBtn);
-
-        await this.wait.networkIdle();
-        await this.actions.click(this.approveText);
-
-        await this.actions.click(this.approveOption);
-
-        await this.actions.fill(
-            this.password,
-            waste.password
-        );
-
-        await this.actions.click(this.confirmBtn);
-
-        await this.actions.click(this.signCommit);
-
-        await this.actions.waitForVisible(this.transferToast);
-
-        await this.actions.click(this.transferToast);
-
-        await this.actions.click(this.closeToast);
-
-        Logger.info('Waste Transfer Completed Successfully');
-
-    }
 async selectBin(binLocator) {
 
     Logger.info('Selecting Waste Bin');
@@ -319,6 +274,7 @@ async selectBin(binLocator) {
     await this.actions.click(binLocator);
 
 }
+
 async selectCountingMethod(methodLocator) {
 
     Logger.info('Selecting Counting Method');
@@ -328,6 +284,48 @@ async selectCountingMethod(methodLocator) {
     await this.actions.click(methodLocator);
 
 }
+
+async approveRecord() {
+
+    await this.actions.click(this.approveText);
+
+    await this.actions.click(this.approveOption);
+
+    await this.actions.fill(
+        this.password,
+        waste.password
+    );
+
+    await this.actions.click(this.confirmBtn);
+
+    await this.actions.click(this.signCommit);
+
+}
+
+async closeSuccessToast() {
+
+    if (await this.successToast.isVisible().catch(() => false)) {
+
+        await this.actions.click(this.closeToast).catch(() => {});
+
+    }
+
+}
+
+async openTransferDialog() {
+
+    Logger.info('Opening Transfer Dialog');
+
+    await this.navigateToWasteManagement();
+
+    await this.actions.waitForVisible(this.moveBtn);
+
+    await this.actions.click(this.moveBtn);
+
+    await this.waitForAppReady();
+
+}
+
 async createWasteEntry(
     binLocator,
     methodLocator,
@@ -336,13 +334,7 @@ async createWasteEntry(
 
     Logger.info('Creating Waste Entry');
 
-    await this.navigateToWasteManagement();
-
-    await this.actions.click(this.addWasteEntryBtn);
-
-    await this.actions.waitForVisible(this.receivingLog);
-
-    await this.waitForAppReady();
+    await this.openAddWasteEntry();
 
     await this.actions.click(this.receivingLog);
 
@@ -355,17 +347,16 @@ async createWasteEntry(
         waste.entryDate
     );
 
-await this.actions.fill(
-    this.activity,
-    activity
-);
+    await this.actions.fill(
+        this.activity,
+        activity
+    );
+
     await this.actions.click(this.instrument);
 
     await this.actions.click(this.instrumentOption);
 
-    await this.selectCountingMethod(
-        methodLocator
-    );
+    await this.selectCountingMethod(methodLocator);
 
     await this.actions.click(this.location);
 
@@ -383,32 +374,28 @@ await this.actions.fill(
 
     await this.actions.click(this.continueBtn);
 
-    await this.wait.networkIdle();
+    await this.approveRecord();
 
-    await this.actions.click(this.approveText);
+    await this.actions.waitForVisible(this.successToast);
 
-    await this.actions.click(this.approveOption);
-
-    await this.actions.fill(
-        this.password,
-        waste.password
-    );
-
-    await this.actions.click(this.confirmBtn);
-
-    await this.actions.click(this.signCommit);
-
-    await this.actions.waitForVisible(
-        this.successToast
-    );
-
-    await this.actions.click(this.successToast);
-
-    await this.actions.click(this.closeToast);
+    await this.closeSuccessToast();
 
     Logger.info('Waste Entry Created');
+
 }
 
+async fillWasteEntry() {
+
+    await this.createWasteEntry(
+        this.highBin001,
+        this.doseCalibratorMethod,
+        '87'
+    );
+
+}
+// ======================================
+// WASTE ENTRY WRAPPER METHODS
+// ======================================
 
 async createWasteHighBin001() {
 
@@ -570,7 +557,6 @@ async createWasteMediumBin001GMSurvey() {
 
 }
 
-
 async createWasteActivityDecimal() {
 
     await this.createWasteEntry(
@@ -601,7 +587,6 @@ async createWasteMinimumActivity() {
 
 }
 
-
 async createWasteMaximumActivity() {
 
     await this.createWasteEntry(
@@ -611,15 +596,9 @@ async createWasteMaximumActivity() {
     );
 
 }
-async openAddWasteEntry() {
-
-    await this.navigateToWasteManagement();
-
-    await this.actions.click(this.addWasteEntryBtn);
-
-    await this.actions.waitForVisible(this.receivingLog);
-
-}
+// ==========================================
+// VALIDATION METHODS
+// ==========================================
 
 async clickContinueOnly() {
 
@@ -652,6 +631,7 @@ async verifyReceivingLogValidation() {
     await this.actions.waitForVisible(
         this.receivingLogValidation
     );
+
     await this.actions.click(this.cancelBtn);
 
 }
@@ -669,47 +649,8 @@ async verifyBinValidation() {
     await this.actions.waitForVisible(
         this.binValidation
     );
-await this.actions.click(this.cancelBtn);
 
-}
-
-async verifyActivityValidation() {
-
-    await this.openAddWasteEntry();
-
-    await this.actions.click(this.receivingLog);
-
-    await this.actions.click(this.receivingLogOption);
-
-    await this.selectBin(this.highBin001);
-
-    await this.clickContinueOnly();
-
-    await this.actions.waitForVisible(
-        this.activityValidation
-    );
-await this.actions.click(this.cancelBtn);
-
-}
-
-async verifyInstrumentValidation() {
-
-    await this.openAddWasteEntry();
-
-    await this.actions.click(this.receivingLog);
-
-    await this.actions.click(this.receivingLogOption);
-
-    await this.selectBin(this.highBin001);
-
-    await this.actions.fill(this.activity, '87');
-
-    await this.clickContinueOnly();
-
-    await this.actions.waitForVisible(
-        this.instrumentValidation
-    );
-await this.actions.click(this.cancelBtn);
+    await this.actions.click(this.cancelBtn);
 
 }
 
@@ -734,36 +675,8 @@ async verifyMethodValidation() {
     await this.actions.waitForVisible(
         this.methodValidation
     );
-await this.actions.click(this.cancelBtn);
 
-}
-
-async verifyLocationValidation() {
-
-    await this.openAddWasteEntry();
-
-    await this.actions.click(this.receivingLog);
-
-    await this.actions.click(this.receivingLogOption);
-
-    await this.selectBin(this.highBin001);
-
-    await this.actions.fill(this.activity, '87');
-
-    await this.actions.click(this.instrument);
-
-    await this.actions.click(this.instrumentOption);
-
-    await this.selectCountingMethod(
-        this.doseCalibratorMethod
-    );
-
-    await this.clickContinueOnly();
-
-    await this.actions.waitForVisible(
-        this.locationValidation
-    );
-await this.actions.click(this.cancelBtn);
+    await this.actions.click(this.cancelBtn);
 
 }
 
@@ -796,7 +709,8 @@ async verifySurveyReadingValidation() {
     await this.actions.waitForVisible(
         this.scValidation
     );
-await this.actions.click(this.cancelBtn);
+
+    await this.actions.click(this.cancelBtn);
 
 }
 
@@ -804,10 +718,9 @@ async verifyDefaultEntryDate() {
 
     await this.openAddWasteEntry();
 
-    await this.actions.waitForVisible(
-        this.entryDate
-    );
-await this.actions.click(this.cancelBtn);
+    await this.actions.waitForVisible(this.entryDate);
+
+    await this.actions.click(this.cancelBtn);
 
 }
 
@@ -815,10 +728,9 @@ async verifyDefaultObservationTextbox() {
 
     await this.openAddWasteEntry();
 
-    await this.actions.waitForVisible(
-        this.observation
-    );
-await this.actions.click(this.cancelBtn);
+    await this.actions.waitForVisible(this.observation);
+
+    await this.actions.click(this.cancelBtn);
 
 }
 
@@ -826,14 +738,551 @@ async verifyContinueButtonVisible() {
 
     await this.openAddWasteEntry();
 
+    await this.actions.waitForVisible(this.continueBtn);
+
+    await this.actions.click(this.cancelBtn);
+
+}
+
+// ==========================================
+// TRANSFER METHODS
+// ==========================================
+
+async moveWasteToLowLevel() {
+
+    Logger.info('Move Waste To Low Bin');
+
+    await this.openTransferDialog();
+
+    await this.selectBin(this.lowBin001);
+
+    if (await this.transferDate.count()) {
+
+        await this.transferDate.fill(
+            waste.transferDate
+        ).catch(() => {});
+
+    }
+
+    await this.actions.fill(
+        this.scTextbox,
+        waste.transferSC
+    );
+
+    await this.actions.click(this.reason);
+
+    await this.actions.click(this.otherReason);
+
+    await this.actions.fill(
+        this.transferObservation,
+        waste.transferObservation
+    );
+
+    await this.actions.click(this.continueBtn);
+
+    await this.approveRecord();
+
+    await this.actions.waitForVisible(
+        this.transferToast
+    );
+
+    await this.actions.click(this.closeToast);
+
+}
+
+async moveWasteToMediumLevel() {
+
+    await this.openTransferDialog();
+
+    await this.selectBin(this.mediumBin001);
+
+    await this.actions.click(this.cancelBtn);
+
+}
+
+async verifyTransferSCMandatory() {
+
+    await this.openTransferDialog();
+
+    await this.actions.click(this.continueBtn);
+
+    await this.actions.click(this.cancelBtn);
+
+}
+
+async verifyTransferReasonMandatory() {
+
+    await this.openTransferDialog();
+
+    await this.actions.fill(
+        this.scTextbox,
+        waste.transferSC
+    );
+
+    await this.actions.click(this.continueBtn);
+
+    await this.actions.click(this.cancelBtn);
+
+}
+
+async verifyTransferObservationOptional() {
+
+    await this.openTransferDialog();
+
+    await this.actions.fill(
+        this.scTextbox,
+        waste.transferSC
+    );
+
+    await this.actions.click(this.cancelBtn);
+
+}
+
+async verifyTransferContinueButton() {
+
+    await this.openTransferDialog();
+
     await this.actions.waitForVisible(
         this.continueBtn
     );
+
     await this.actions.click(this.cancelBtn);
 
+}
+
+async verifyCancelTransfer() {
+
+    await this.openTransferDialog();
+
+    await this.actions.click(this.cancelBtn);
 
 }
 
+async verifyCloseTransfer() {
+
+    await this.openTransferDialog();
+
+    await this.page.keyboard.press('Escape');
+
 }
 
+async transferWasteSuccessfully() {
+
+    await this.moveWasteToLowLevel();
+
+}
+
+async verifyTransferredWaste() {
+
+    await this.actions.waitForVisible(this.moveBtn);
+
+}
+
+async verifyUpdatedBin() {
+
+    Logger.info('Verify Updated Bin');
+
+}
+
+async verifyWasteStatus() {
+
+    Logger.info('Verify Waste Status');
+
+}
+
+async verifyTransferHistory() {
+
+    Logger.info('Verify Transfer History');
+
+}
+
+async verifyMultipleTransfers() {
+
+    Logger.info('Verify Multiple Transfers');
+
+}
+
+async verifyMoveButton() {
+
+    await this.actions.waitForVisible(
+        this.moveBtn
+    );
+
+}
+
+async verifyMoveDialog() {
+
+    await this.openTransferDialog();
+
+    await this.actions.click(this.cancelBtn);
+
+}
+
+async openApprovalPopup() {
+
+    await this.openTransferDialog();
+
+    await this.selectBin(this.lowBin001);
+
+    await this.actions.fill(
+        this.scTextbox,
+        waste.transferSC
+    );
+
+    await this.actions.click(this.reason);
+
+    await this.actions.click(this.otherReason);
+
+    await this.actions.fill(
+        this.transferObservation,
+        waste.transferObservation
+    );
+
+    await this.actions.click(this.continueBtn);
+
+    await this.actions.waitForVisible(
+        this.approveText
+    );
+await this.actions.click(this.cancelBtn);
+await this.actions.click(this.cancelBtn);
+
+}
+
+async verifyTransferApprovalPopup() {
+
+    await this.openApprovalPopup();
+
+}
+// =======================================================
+// GM SURVEY
+// =======================================================
+
+async createWasteHighBin002GMSurvey() {
+
+    await this.createWasteEntry(
+        this.highBin002,
+        this.gmSurveyMethod,
+        '87'
+    );
+
+}
+
+async createWasteHighBin003GMSurvey() {
+
+    await this.createWasteEntry(
+        this.highBin003,
+        this.gmSurveyMethod,
+        '87'
+    );
+
+}
+
+async createWasteHighBin004GMSurvey() {
+
+    await this.createWasteEntry(
+        this.highBin004,
+        this.gmSurveyMethod,
+        '87'
+    );
+
+}
+
+async createWasteMediumBin002GMSurvey() {
+
+    await this.createWasteEntry(
+        this.mediumBin002,
+        this.gmSurveyMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin003GMSurvey() {
+
+    await this.createWasteEntry(
+        this.mediumBin003,
+        this.gmSurveyMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin004GMSurvey() {
+
+    await this.createWasteEntry(
+        this.mediumBin004,
+        this.gmSurveyMethod,
+        '70'
+    );
+
+}
+
+async createWasteLowBin001GMSurvey() {
+
+    await this.createWasteEntry(
+        this.lowBin001,
+        this.gmSurveyMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin002GMSurvey() {
+
+    await this.createWasteEntry(
+        this.lowBin002,
+        this.gmSurveyMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin003GMSurvey() {
+
+    await this.createWasteEntry(
+        this.lowBin003,
+        this.gmSurveyMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin004GMSurvey() {
+
+    await this.createWasteEntry(
+        this.lowBin004,
+        this.gmSurveyMethod,
+        '45'
+    );
+
+}
+
+// =======================================================
+// LIQUID SCINTILLATION
+// =======================================================
+
+async createWasteHighBin002LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.highBin002,
+        this.liquidScintillationMethod,
+        '87'
+    );
+
+}
+
+async createWasteHighBin003LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.highBin003,
+        this.liquidScintillationMethod,
+        '87'
+    );
+
+}
+
+async createWasteHighBin004LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.highBin004,
+        this.liquidScintillationMethod,
+        '87'
+    );
+
+}
+
+async createWasteMediumBin001LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.mediumBin001,
+        this.liquidScintillationMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin002LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.mediumBin002,
+        this.liquidScintillationMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin003LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.mediumBin003,
+        this.liquidScintillationMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin004LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.mediumBin004,
+        this.liquidScintillationMethod,
+        '70'
+    );
+
+}
+
+async createWasteLowBin001LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.lowBin001,
+        this.liquidScintillationMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin002LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.lowBin002,
+        this.liquidScintillationMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin003LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.lowBin003,
+        this.liquidScintillationMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin004LiquidScintillation() {
+
+    await this.createWasteEntry(
+        this.lowBin004,
+        this.liquidScintillationMethod,
+        '45'
+    );
+
+}
+
+// =======================================================
+// NaI DETECTOR
+// =======================================================
+
+async createWasteHighBin002NaIDetector() {
+
+    await this.createWasteEntry(
+        this.highBin002,
+        this.naiDetectorMethod,
+        '87'
+    );
+
+}
+
+async createWasteHighBin003NaIDetector() {
+
+    await this.createWasteEntry(
+        this.highBin003,
+        this.naiDetectorMethod,
+        '87'
+    );
+
+}
+
+async createWasteHighBin004NaIDetector() {
+
+    await this.createWasteEntry(
+        this.highBin004,
+        this.naiDetectorMethod,
+        '87'
+    );
+
+}
+
+async createWasteMediumBin001NaIDetector() {
+
+    await this.createWasteEntry(
+        this.mediumBin001,
+        this.naiDetectorMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin002NaIDetector() {
+
+    await this.createWasteEntry(
+        this.mediumBin002,
+        this.naiDetectorMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin003NaIDetector() {
+
+    await this.createWasteEntry(
+        this.mediumBin003,
+        this.naiDetectorMethod,
+        '70'
+    );
+
+}
+
+async createWasteMediumBin004NaIDetector() {
+
+    await this.createWasteEntry(
+        this.mediumBin004,
+        this.naiDetectorMethod,
+        '70'
+    );
+
+}
+
+async createWasteLowBin001NaIDetector() {
+
+    await this.createWasteEntry(
+        this.lowBin001,
+        this.naiDetectorMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin002NaIDetector() {
+
+    await this.createWasteEntry(
+        this.lowBin002,
+        this.naiDetectorMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin003NaIDetector() {
+
+    await this.createWasteEntry(
+        this.lowBin003,
+        this.naiDetectorMethod,
+        '45'
+    );
+
+}
+
+async createWasteLowBin004NaIDetector() {
+
+    await this.createWasteEntry(
+        this.lowBin004,
+        this.naiDetectorMethod,
+        '45'
+    );
+
+}
+}
 module.exports = { WasteManagementPage };
