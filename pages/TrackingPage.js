@@ -722,9 +722,15 @@ async editReceiver() {
 
     await this.editReceiverTextbox.fill(updatedReceiver);
 
+    await expect(this.editReceiverTextbox)
+        .toHaveValue(updatedReceiver);
+
     await this.saveShipment();
 
-    await expect(this.page.locator('tbody')).toContainText(updatedReceiver);
+    await this.searchShipment(tracking.trackingNumber);
+
+    await expect(this.tableRows.first())
+        .toContainText(updatedReceiver);
 
 }
 async editQuantity() {

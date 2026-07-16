@@ -1224,7 +1224,6 @@ async createWasteMediumBin002NaIDetector() {
     );
 
 }
-
 async createWasteMediumBin003NaIDetector() {
 
     await this.createWasteEntry(
@@ -1234,7 +1233,6 @@ async createWasteMediumBin003NaIDetector() {
     );
 
 }
-
 async createWasteMediumBin004NaIDetector() {
 
     await this.createWasteEntry(
@@ -1244,7 +1242,6 @@ async createWasteMediumBin004NaIDetector() {
     );
 
 }
-
 async createWasteLowBin001NaIDetector() {
 
     await this.createWasteEntry(
@@ -1254,7 +1251,6 @@ async createWasteLowBin001NaIDetector() {
     );
 
 }
-
 async createWasteLowBin002NaIDetector() {
 
     await this.createWasteEntry(
@@ -1264,7 +1260,6 @@ async createWasteLowBin002NaIDetector() {
     );
 
 }
-
 async createWasteLowBin003NaIDetector() {
 
     await this.createWasteEntry(
@@ -1274,7 +1269,6 @@ async createWasteLowBin003NaIDetector() {
     );
 
 }
-
 async createWasteLowBin004NaIDetector() {
 
     await this.createWasteEntry(
@@ -1282,7 +1276,6 @@ async createWasteLowBin004NaIDetector() {
         this.naiDetectorMethod,
         '45'
     );
-
 }
 }
 module.exports = { WasteManagementPage };

@@ -91,9 +91,6 @@ test('TC011 - Create Waste Entry Low Bin003 Dose Calibrator', async () => {
 //     await waste.createWasteLowBin004();
 // });
 
-// ==========================
-// GM SURVEY
-// ==========================
 
 test('TC013 - Create Waste Entry High Bin001 GM Survey', async () => {
 
@@ -167,10 +164,6 @@ test('TC024 - Create Waste Entry Low Bin004 GM Survey', async () => {
 
 });
 
-// ==========================
-// LIQUID SCINTILLATION
-// ==========================
-
 test('TC025 - Create Waste Entry High Bin001 Liquid Scintillation', async () => {
 
     await waste.createWasteHighBin001LiquidScintillation();
@@ -242,10 +235,6 @@ test('TC036 - Create Waste Entry Low Bin004 Liquid Scintillation', async () => {
     await waste.createWasteLowBin004LiquidScintillation();
 
 });
-
-// ==========================
-// NaI DETECTOR
-// ==========================
 
 test('TC037 - Create Waste Entry High Bin001 NaI Detector', async () => {
 
