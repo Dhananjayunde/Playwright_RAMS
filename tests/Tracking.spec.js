@@ -308,15 +308,8 @@ test.describe.serial('Tracking Module', () => {
 
     });
 
-    test('TC041 - Open Edit Shipment Dialog', async () => {
 
-        await tracking.openOutgoingTab();
-
-        await tracking.openEditShipment();
-
-    });
-
-    test('TC042 - Close Edit Shipment Dialog', async () => {
+    test('TC041 - Open and Close Edit Shipment Dialog', async () => {
 
         await tracking.openOutgoingTab();
 
@@ -326,48 +319,48 @@ test.describe.serial('Tracking Module', () => {
 
     });
      
-    test('TC043 - Edit Shipment Description', async () => {
+    test('TC042 - Edit Shipment Description', async () => {
 
         await tracking.editShipmentDescription();
 
     });
 
-    test('TC044 - Edit Shipment Sender', async () => {
+    test('TC043 - Edit Shipment Sender', async () => {
 
         await tracking.editSender();
 
     });
 
-    test('TC045 - Edit Shipment Receiver', async () => {
+    test('TC044 - Edit Shipment Receiver', async () => {
 
         await tracking.editReceiver();
 
     });
 
-    test('TC046 - Edit Shipment Quantity', async () => {
+    test('TC045 - Edit Shipment Quantity', async () => {
 
         await tracking.editQuantity();
 
     });
 
-    test('TC047 - Save Edited Shipment', async () => {
+    test('TC046 - Save Edited Shipment', async () => {
 
            await tracking.saveEditedShipment();
 
     });
 
-    test('TC048 - Verify Outgoing Shipment Added', async () => {
+    test('TC047 - Verify Outgoing Shipment Added', async () => {
 
         await tracking.verifyOutgoingShipmentAdded();
 
     });
 
-    test('TC049 - Verify Incoming Shipment Added', async () => {
+    test('TC048 - Verify Incoming Shipment Added', async () => {
        await tracking.verifyIncomingShipmentAdded();
 
     });
 
-    test('TC050 - Tracking End To End Flow', async () => {
+    test('TC049 - Tracking End To End Flow', async () => {
 
         await tracking.fillTrackingEntry();
         await tracking.searchShipment('Tc-9545');

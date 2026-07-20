@@ -1,4 +1,4 @@
-const { test } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 const ExcelUtils = require('../utils/ExcelUtils');
 const { LoginPage } = require('../pages/LoginPage');
 const { IsotopePage } = require('../pages/IsotopePage');
@@ -54,10 +54,6 @@ test.describe.serial('Isotope Module', () => {
         await isotope.addIsotope('Calibration');
     });
 
-    // ==========================================
-    // Activation
-    // ==========================================
-
     test('TC005 - Deactivate Isotope', async () => {
         await isotope.deactivateIsotope();
     });
@@ -65,10 +61,6 @@ test.describe.serial('Isotope Module', () => {
     test('TC006 - Activate Isotope', async () => {
         await isotope.activateIsotope();
     });
-
-    // ==========================================
-    // Filters
-    // ==========================================
 
     test('TC007 - Verify All Filter in Active Tab', async () => {
         await isotope.openActiveTab();

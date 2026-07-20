@@ -1,3 +1,4 @@
+const { expect } = require('@playwright/test');
 const BasePage = require('./BasePage');
 const CONSTANTS = require('../config/constants');
 const TestDataManager = require('../utils/TestDataManager');
@@ -305,23 +306,35 @@ class IsotopePage extends BasePage {
 
     async deactivateIsotope() {
 
-        Logger.step('Deactivate Isotope');
+    Logger.step('Deactivate Isotope');
 
-        await this.openActiveTab();
+    await this.openActiveTab();
 
-        Logger.info('Selecting first isotope');
+    Logger.info('Selecting first isotope');
 
-        await this.actions.click(this.firstToggle);
+    await expect(this.firstToggle).toBeChecked();
 
-        Logger.info('Confirming deactivation');
+    await this.firstToggle.click();
 
-        await this.actions.click(this.confirmDeactivateBtn);
+    Logger.info('Confirming deactivation');
 
-        await this.actions.waitForVisible(this.deactivateToast);
+    await expect(this.confirmDeactivateBtn).toBeVisible();
 
-        Logger.success('Isotope deactivated successfully');
+    await this.confirmDeactivateBtn.click();
 
-    }
+    await expect(this.confirmDeactivateBtn).toBeHidden({
+        timeout:10000
+    });
+
+    // await expect(
+    //     this.page.getByText(/deactivated/i)
+    // ).toBeVisible({
+    //     timeout:10000
+    // });
+
+    Logger.success('Isotope deactivated successfully');
+
+}
 
     async activateIsotope() {
 

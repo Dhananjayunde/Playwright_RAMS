@@ -2,7 +2,6 @@ const { test, expect } = require('@playwright/test');
 const ExcelUtils = require('../utils/ExcelUtils');
 const { LoginPage } = require('../pages/LoginPage');
 const { WasteManagementPage } = require('../pages/WasteManagementPage');
-
 const testData = ExcelUtils.getData(
     './testData/LoginData.xlsx',
     'Sheet2'
