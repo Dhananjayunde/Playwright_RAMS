@@ -1,0 +1,30 @@
+{
+    "isotope": "Ag-111 — Silver",
+    "manufacturer": "Cardinal Health",
+    "timeZone": "Etc/UTC",
+    "unit": "Ci",
+    "storageLocation": "Cold Room",
+
+    "receiveDate": "2026-07-01",
+    "referenceDate": "2026-07-21T16:15",
+    "calibrationDate": "2026-07-17T15:16",
+    "expiryDate": "2026-07-31",
+
+    "internalLot": "pb-212",
+    "externalLot": "EXT67890",
+
+    "quantity": "0.1",
+    "concentration": "54",
+    "referenceActivity": "2450",
+
+    "surface": "5",
+    "t1": "5",
+    "insideWipe": "5",
+    "outsideWipe": "5",
+    "wipeBG": "5",
+    "background": "1",
+
+    "serialNumber": "SN12345",
+
+    "notes": "Receiving log automation testing"
+    }

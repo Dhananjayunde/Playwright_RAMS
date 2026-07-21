@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const ExcelUtils = require('../utils/ExcelUtils');
-const { LoginPage } = require('../pages/LoginPage');
+const { LoginPage} = require('../pages/LoginPage');
 const { IsotopePage } = require('../pages/IsotopePage');
 const Hooks = require('../hooks/Hooks');
 const testData = ExcelUtils.getData('./testData/LoginData.xlsx','Sheet2');
@@ -33,10 +33,6 @@ test.describe.serial('Isotope Module', () => {
     test.afterEach(async ({}, testInfo) => {
         await Hooks.afterTest(page, testInfo);
     });
-
-    // ==========================================
-    // Add Isotope
-    // ==========================================
 
     test('TC001 - Add Isotope with Therapeutic Category', async () => {
         await isotope.addIsotope('Therapeutic');
@@ -92,10 +88,6 @@ test.describe.serial('Isotope Module', () => {
         await isotope.clickLongHalfLife();
     });
 
-    // ==========================================
-    // Search
-    // ==========================================
-
     test('TC013 - Search Isotope by Symbol', async () => {
         await isotope.searchIsotope('Lu-177');
     });
@@ -133,10 +125,6 @@ test.describe.serial('Isotope Module', () => {
         await isotope.clearSearch();
     });
 
-    // ==========================================
-    // UI Verification
-    // ==========================================
-
     test('TC022 - Verify Isotope Database Page Loaded', async () => {
         await isotope.verifyPageLoaded();
     });
@@ -169,10 +157,6 @@ test.describe.serial('Isotope Module', () => {
         await isotope.actions.verifyVisible(isotope.inactiveTab);
     });
 
-    // ==========================================
-    // Pagination
-    // ==========================================
-
     test('TC030 - Verify Next Page Navigation', async () => {
         await isotope.clickNextPage();
     });
@@ -180,10 +164,6 @@ test.describe.serial('Isotope Module', () => {
     test('TC031 - Verify Previous Page Navigation', async () => {
         await isotope.clickPreviousPage();
     });
-
-    // ==========================================
-    // Table Verification
-    // ==========================================
 
     test('TC032 - Verify Next Page Button Visible', async () => {
         await isotope.actions.verifyVisible(isotope.nextPage);
@@ -201,9 +181,6 @@ test.describe.serial('Isotope Module', () => {
         await isotope.tableRows.first().click();
     });
 
-    // ==========================================
-    // Functional Combination
-    // ==========================================
 
     test('TC036 - Verify Search After All Filter', async () => {
         await isotope.clickAllFilter();

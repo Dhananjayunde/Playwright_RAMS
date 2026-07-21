@@ -42,7 +42,7 @@ await this.wait.pageReady();
 
     }
 
-    async enterOTP(otpCode = '539097') {
+    async enterOTP(otpCode = '699336') {
 
         await this.actions.waitForVisible(this.verifyBtn);
 

@@ -14,8 +14,8 @@ const CONSTANTS = {
 
         TRACKING: 'Tracking',
         WASTE_MANAGEMENT: 'Waste Management',
-        ISOTOPE_DATABASE: 'Isotope Database'
-
+        ISOTOPE_DATABASE: 'Isotope Database',
+        RECEIVING_LOG: 'Receiving Log',
     },
 
     TABS: {
