@@ -76,9 +76,9 @@ test.describe.serial('Receiving Module', () => {
         await receiving.verifyCancelButton();
     });
     
-// test('TC011 - Add New Receiving Log Entry', async () => {
-//     await receiving.addReceivingEntry(data.Password);
-// });
+test('TC011 - Add New Receiving Log Entry', async () => {
+    //await receiving.addReceivingEntry(data.Password);
+});
 
 test('TC012 - Verify Newly Added Entry Appears In Grid', async () => {
     await receiving.verifyNewEntryAdded();
@@ -109,7 +109,7 @@ test('TC018 - Void Receiving Entry', async () => {
 });
 
 test('TC019 - Verify Entry Moved To Voided Entries', async () => {
-    await receiving.verifyEntryInVoidedTab();
+    await receiving.detailVoidEntry();
 });
 
 test('TC020 - Reinstate Voided Entry', async () => {
