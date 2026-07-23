@@ -204,10 +204,7 @@ class ReceivingLogPage extends BasePage {
                 'Enter your account password'
             );
 
-        //==================================================
-        // TABLE
-        //==================================================
-
+        
         this.table =
             page.locator('table');
 
@@ -217,10 +214,7 @@ class ReceivingLogPage extends BasePage {
         this.tableHeaders =
             page.locator('thead th');
 
-        //==================================================
-        // ACTION BUTTONS
-        //==================================================
-
+       
         this.detailsButton =page.locator("tbody tr:nth-child(1) td:nth-child(11) div:nth-child(1) button:nth-child(1)");
 
         this.closeBtn=page.locator('button:has-text("Close")');    
@@ -229,10 +223,7 @@ class ReceivingLogPage extends BasePage {
         this.voidDescription= page.getByRole('textbox', { name: 'Describe the reason for voiding this entry (required)...' });
         this.reinstateButton =page.locator("tbody tr:nth-child(1) td:nth-child(11) div:nth-child(1) button:nth-child(2)");
 
-        //==================================================
-        // PAGINATION
-        //==================================================
-
+        
         this.nextPage =
             page.getByRole('button', {
                 name: /Go to next page/i
@@ -248,10 +239,7 @@ class ReceivingLogPage extends BasePage {
                 name: /Rows per page/i
             });
 
-    }//==================================================
-// Navigation
-//==================================================
-
+    }
 async openReceivingLog() {
 
     Logger.info('Opening Receiving Log Module');
@@ -261,10 +249,6 @@ async openReceivingLog() {
     await expect(this.pageTitle).toBeVisible();
 
 }
-
-//==================================================
-// Page Verification
-//==================================================
 
 async verifyReceivingLogPage() {
 
@@ -289,10 +273,6 @@ async verifyDashboardCards() {
 
 }
 
-//==================================================
-// Log Receipt Button
-//==================================================
-
 async verifyLogReceiptButton() {
 
     Logger.info('Verify Log Receipt Button');
@@ -302,10 +282,6 @@ async verifyLogReceiptButton() {
     await expect(this.logReceiptBtn).toBeEnabled();
 
 }
-
-//==================================================
-// Open Log Receipt Dialog
-//==================================================
 
 async openLogReceipt() {
 
@@ -318,10 +294,6 @@ async openLogReceipt() {
     await this.actions.click(this.cancelBtn);
 
 }
-
-//==================================================
-// Close Dialog
-//==================================================
 
 async verifyCloseButton() {
 
@@ -515,9 +487,6 @@ async verifyCancelESignDialog() {
         .toBeVisible();
 
 }
-//==================================================
-// TC011 - Add Receiving Entry
-//==================================================
 async addReceivingEntry(password) {
 
     Logger.info('Add Receiving Entry');
@@ -531,10 +500,6 @@ async addReceivingEntry(password) {
     await expect(this.pageTitle).toBeVisible();
 }
 
-//==================================================
-// TC012 - Verify New Entry Added
-//==================================================
-
 async verifyNewEntryAdded() {
 
     Logger.info('Verify Newly Added Entry');
@@ -544,10 +509,6 @@ async verifyNewEntryAdded() {
    // await expect(this.tableRows.first()).toContainText(receiving.internalLot);
 
 }
-
-//==================================================
-// TC013 - Search By Internal Lot
-//==================================================
 
 async searchByInternalLot() {
 
@@ -561,10 +522,6 @@ async searchByInternalLot() {
     
     }
 
-//==================================================
-// TC014 - Search By Isotope
-//==================================================
-
 async searchByIsotope() {
 
     Logger.info('Search By Isotope');
@@ -574,11 +531,6 @@ async searchByIsotope() {
     //await expect(this.tableRows.first()).toContainText('Ag');
 
 }
-
-//==================================================
-// TC015 - Clear Search
-//==================================================
-
 async clearSearchAndVerifyRecords() {
 
     Logger.info('Clear Search');
@@ -588,10 +540,6 @@ async clearSearchAndVerifyRecords() {
     await expect(this.tableRows.first()).toBeVisible();
 
 }
-
-//==================================================
-// TC016 - View Entry Details
-//==================================================
 
 async viewEntryDetails() {
 
@@ -604,10 +552,6 @@ async viewEntryDetails() {
 
 }
 
-//==================================================
-// TC017 - Close Details Dialog
-//==================================================
-
 async closeDetailsDialog() {
 
     Logger.info('Close Details Dialog');
@@ -617,10 +561,6 @@ async closeDetailsDialog() {
     await expect(this.pageTitle).toBeVisible();
 
 }
-
-//==================================================
-// TC018 - Void Entry
-//==================================================
 
 async voidEntry(password) {
 
@@ -637,10 +577,6 @@ async voidEntry(password) {
     await this.actions.click(this.signCommitBtn);
   
 }
-
-//==================================================
-// TC019 - Verify Entry In Voided Tab
-//==================================================
 
 async detailVoidEntry() {
 
