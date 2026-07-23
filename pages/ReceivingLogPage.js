@@ -612,9 +612,9 @@ async closeDetailsDialog() {
 
     Logger.info('Close Details Dialog');
 
-    // await this.closeBtn.click();
+    await this.closeBtn.click();
 
-    // await expect(this.pageTitle).toBeVisible();
+    await expect(this.pageTitle).toBeVisible();
 
 }
 
