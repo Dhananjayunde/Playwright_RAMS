@@ -216,11 +216,7 @@ this.addWasteDialog =
     page.getByText('+ Add Waste Entry');
     }
 
-   // ===========================
-// COMMON HELPER METHODS
-// ===========================
-
-async waitForAppReady() {
+  async waitForAppReady() {
 
     await this.page.waitForLoadState('domcontentloaded');
     await this.page.waitForLoadState('networkidle');
@@ -232,15 +228,12 @@ async navigateToWasteManagement() {
 
     Logger.info('Navigating to Waste Management');
 
-    // Already on Waste Management page
     if (await this.addWasteEntryBtn.isVisible().catch(() => false)) {
         return;
     }
 
-    // Close any dialog blocking clicks
     await this.page.keyboard.press('Escape').catch(() => {});
 
-    // Close any visible dialog using Close icon
     if (await this.closeBtn.isVisible().catch(() => false)) {
         await this.closeBtn.click().catch(() => {});
     }
@@ -393,10 +386,6 @@ async fillWasteEntry() {
     );
 
 }
-// ======================================
-// WASTE ENTRY WRAPPER METHODS
-// ======================================
-
 async createWasteHighBin001() {
 
     await this.createWasteEntry(
@@ -596,10 +585,6 @@ async createWasteMaximumActivity() {
     );
 
 }
-// ==========================================
-// VALIDATION METHODS
-// ==========================================
-
 async clickContinueOnly() {
 
     await this.actions.click(this.continueBtn);
@@ -743,10 +728,6 @@ async verifyContinueButtonVisible() {
     await this.actions.click(this.cancelBtn);
 
 }
-
-// ==========================================
-// TRANSFER METHODS
-// ==========================================
 
 async moveWasteToLowLevel() {
 
@@ -953,10 +934,6 @@ async verifyTransferApprovalPopup() {
     await this.openApprovalPopup();
 
 }
-// =======================================================
-// GM SURVEY
-// =======================================================
-
 async createWasteHighBin002GMSurvey() {
 
     await this.createWasteEntry(
@@ -1057,9 +1034,6 @@ async createWasteLowBin004GMSurvey() {
 
 }
 
-// =======================================================
-// LIQUID SCINTILLATION
-// =======================================================
 
 async createWasteHighBin002LiquidScintillation() {
 
@@ -1170,10 +1144,6 @@ async createWasteLowBin004LiquidScintillation() {
     );
 
 }
-
-// =======================================================
-// NaI DETECTOR
-// =======================================================
 
 async createWasteHighBin002NaIDetector() {
 

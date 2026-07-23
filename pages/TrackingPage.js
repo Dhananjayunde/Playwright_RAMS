@@ -69,9 +69,7 @@ class TrackingPage extends BasePage {
         this.closeButton =page.getByTestId('CloseIcon');
        // this.cancelButton =page.getByTestId('CloseIcon');
         this.dialog = page.getByRole('dialog');
-       this.cancelButton = page
-    .getByRole('dialog')
-    .getByRole('button', { name: /^Cancel$/ });
+        this.cancelButton = page.getByRole('dialog').getByRole('button', { name: /^Cancel$/ });
         this.shipmentType = page.getByRole('combobox').first();
         this.outgoingOption = page.getByRole('option', {
             name: 'Outgoing'
@@ -718,8 +716,7 @@ async editSender() {
 
     await this.saveShipment();
 
-    await expect(this.page.locator('tbody'))
-        .toContainText(updatedSender);
+    await expect(this.page.locator('tbody')).toContainText(updatedSender);
 
 }
 async editReceiver() {
@@ -759,8 +756,7 @@ async editQuantity() {
 
     await this.saveShipment();
 
-    await expect(this.page.locator('tbody'))
-        .toContainText(updatedQuantity);
+    await expect(this.page.locator('tbody')).toContainText(updatedQuantity);
 
 }
 async saveEditedShipment() {
