@@ -1,0 +1,19 @@
+{
+    "date": "2026-07-29",
+
+    "incomingTitle": "Tc-99m Weekly Delivery",
+    "outgoingTitle": "Transfer To Branch",
+    "wasteTitle": "Waste Pickup",
+
+    "vendor": "Cardinal Health",
+
+    "activity": "2450",
+
+    "destination": "Main Facility",
+
+    "description": "Automation Calendar Event",
+
+    "incomingType": "Incoming RAM",
+    "outgoingType": "Outgoing Transfer",
+    "wasteType": "Waste Pickup"
+}
